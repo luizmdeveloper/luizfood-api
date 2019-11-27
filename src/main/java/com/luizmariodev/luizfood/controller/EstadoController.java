@@ -3,6 +3,7 @@ package com.luizmariodev.luizfood.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,13 @@ public class EstadoController {
 	}
 	
 	@GetMapping("/{id}")
-	public Estado buscarPorId(@PathVariable Long id) {
-		return estadoRepository.buscarPorId(id);
+	public ResponseEntity<Estado> buscarPorId(@PathVariable Long id) {
+		Estado estado = estadoRepository.buscarPorId(id);
+		
+		if (estado != null) {
+			return ResponseEntity.ok(estado);
+		} 
+		
+		return ResponseEntity.notFound().build();
 	}
 }
