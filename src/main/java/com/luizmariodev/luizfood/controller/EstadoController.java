@@ -2,9 +2,7 @@ package com.luizmariodev.luizfood.controller;
 
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.luizmariodev.luizfood.domain.exception.EntidadeEmUsoException;
+import com.luizmariodev.luizfood.domain.exception.EntidadeNaoEncontradaException;
 import com.luizmariodev.luizfood.domain.model.Estado;
 import com.luizmariodev.luizfood.domain.repository.EstadoRepository;
+import com.luizmariodev.luizfood.domain.service.EstadoService;
 
 @RestController
 @RequestMapping("/estados")
@@ -26,6 +27,9 @@ public class EstadoController {
 
 	@Autowired
 	private EstadoRepository estadoRepository;
+	
+	@Autowired
+	private EstadoService estadoService;
 	
 	@GetMapping
 	public List<Estado> buscar() {
@@ -46,34 +50,27 @@ public class EstadoController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Estado salvar(@RequestBody Estado estado) {
-		return estadoRepository.salvar(estado);
+		return estadoService.salvar(estado);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Estado> atualizar(@PathVariable Long id, @RequestBody Estado estado) {
-		Estado estadoAtual = estadoRepository.buscarPorId(id);
-		
-		if (estadoAtual != null) {
-			BeanUtils.copyProperties(estado, estadoAtual, "id");
-			estadoRepository.salvar(estadoAtual);
-			return ResponseEntity.ok(estadoAtual);
+	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Estado estado) {		
+		try {
+			Estado estadoSalvo = estadoService.atualizar(id, estado);		
+			return ResponseEntity.ok(estadoSalvo);
+		} catch (EntidadeNaoEncontradaException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-		
-		return ResponseEntity.notFound().build();
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> excluir(@PathVariable Long id) {
-		Estado estado = estadoRepository.buscarPorId(id);
-		
 		try {
-			if (estado != null) {
-				estadoRepository.excluir(estado);
-				return ResponseEntity.notFound().build();
-			}
-			
-			return ResponseEntity.notFound().build();
-		} catch (DataIntegrityViolationException e) {
+			estadoService.excluir(id);
+			return ResponseEntity.noContent().build();
+		} catch (EntidadeNaoEncontradaException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		} catch (EntidadeEmUsoException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 	}
