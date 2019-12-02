@@ -31,7 +31,7 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
 	}
 
 	@Transactional
-	public void remover(Cozinha cozinha) {
+	public void excluir(Cozinha cozinha) {
 		manager.remove(cozinha);
 	}
 }

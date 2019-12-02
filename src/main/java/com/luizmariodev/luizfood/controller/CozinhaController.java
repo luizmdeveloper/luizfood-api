@@ -67,7 +67,7 @@ public class CozinhaController {
 		try {
 			
 			if (cozinha != null) {
-				cozinhaRepository.remover(cozinha);
+				cozinhaRepository.excluir(cozinha);
 				return ResponseEntity.noContent().build();
 			}
 			
