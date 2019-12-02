@@ -30,6 +30,7 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
 		return manager.merge(cozinha);
 	}
 
+	@Transactional
 	public void remover(Cozinha cozinha) {
 		manager.remove(cozinha);
 	}
