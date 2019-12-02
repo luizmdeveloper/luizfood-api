@@ -53,6 +53,7 @@ public class EstadoController {
 		
 		if (estadoAtual != null) {
 			BeanUtils.copyProperties(estado, estadoAtual, "id");
+			estadoRepository.salvar(estadoAtual);
 			return ResponseEntity.ok(estadoAtual);
 		}
 		
