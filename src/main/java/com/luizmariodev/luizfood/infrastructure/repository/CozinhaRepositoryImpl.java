@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import com.luizmariodev.luizfood.domain.model.Cozinha;
@@ -31,7 +32,13 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
 	}
 
 	@Transactional
-	public void excluir(Cozinha cozinha) {
+	public void excluir(Long id) {
+		Cozinha cozinha = buscarPorId(id);
+		
+		if (cozinha == null) {
+			throw new EmptyResultDataAccessException(1);
+		}
+		
 		manager.remove(cozinha);
 	}
 }
