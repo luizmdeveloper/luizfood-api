@@ -9,6 +9,6 @@ public interface EstadoRepository {
 	public List<Estado> buscarTodos();
 	public Estado buscarPorId(Long id);
 	public Estado salvar(Estado estado);
-	public void excluir(Estado estado);
+	public void excluir(Long id);
 	
 }

@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import com.luizmariodev.luizfood.domain.model.Estado;
@@ -31,7 +32,13 @@ public class EstadoRepositoryImpl implements EstadoRepository {
 	}
 
 	@Transactional
-	public void excluir(Estado estado) {
+	public void excluir(Long id) {
+		Estado estado = buscarPorId(id);
+		
+		if (estado == null) {
+			throw new EmptyResultDataAccessException(1);
+		}
+		
 		manager.remove(estado);
 	}
 
