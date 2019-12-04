@@ -56,11 +56,8 @@ public class CidadeService {
 	}
 
 	private Estado buscarEstadoPorCodigo(Long estadoId) {
-		Estado estado = estadoRepository.buscarPorId(estadoId);
-		
-		if (estado == null) {
-			throw new EntidadeNaoEncontradaException(String.format("Estado de código %d, não foi encontrada", estadoId));
-		}
+		Estado estado = estadoRepository.findById(estadoId)
+				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Estado de código %d, não foi encontrada", estadoId)));
 		
 		return estado;
 	}

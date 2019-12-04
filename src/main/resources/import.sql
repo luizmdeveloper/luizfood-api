@@ -17,3 +17,7 @@ INSERT INTO estados (nome) VALUES ('Ceará');
 INSERT INTO estados (nome) VALUES ('Piauí');
 INSERT INTO estados (nome) VALUES ('Marnhão');
 INSERT INTO estados (nome) VALUES ('Rio grande do Norte');
+
+/* inserção na tabelas de cidades */
+INSERT INTO cidades (nome, codigo_estado) VALUES ('Petrolina', 1);
+INSERT INTO cidades (nome, codigo_estado) VALUES ('Salgueiro', 1);

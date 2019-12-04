@@ -18,18 +18,18 @@ public class EstadoService {
 	private EstadoRepository estadoRepository;
 	
 	public Estado salvar(Estado estado) {
-		return estadoRepository.salvar(estado);
+		return estadoRepository.save(estado);
 	}
 
 	public Estado atualizar(Long id, Estado estado) {
 		Estado estadoAtual = buscarEstadoPorCodigo(id);
 		BeanUtils.copyProperties(estado, estadoAtual, "id");
-		return estadoRepository.salvar(estadoAtual);
+		return estadoRepository.save(estadoAtual);
 	}
 	
 	public void excluir(Long estadoId) {
 		try {
-			estadoRepository.excluir(estadoId);
+			estadoRepository.deleteById(estadoId);
 		} catch (EmptyResultDataAccessException e) {
 			throw new EntidadeNaoEncontradaException(String.format("Estado de código %d, não foi encontrado", estadoId));
 		} catch (DataIntegrityViolationException e) {
@@ -38,12 +38,9 @@ public class EstadoService {
 	}
 
 	private Estado buscarEstadoPorCodigo(Long id)  {
-		Estado estado = estadoRepository.buscarPorId(id);
-		
-		if (estado != null) {
-			throw new EntidadeNaoEncontradaException(String.format("Estado de código %d, não foi encontrado", id));
-		}
-		
+		Estado estado = estadoRepository.findById(id)
+				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Estado de código %d, não foi encontrado", id)));
+			
 		return estado;
 	}
 }

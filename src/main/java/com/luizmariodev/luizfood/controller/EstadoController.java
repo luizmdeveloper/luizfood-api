@@ -1,6 +1,7 @@
 package com.luizmariodev.luizfood.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,15 +34,15 @@ public class EstadoController {
 	
 	@GetMapping
 	public List<Estado> buscar() {
-		return estadoRepository.buscarTodos();
+		return estadoRepository.findAll();
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Estado> buscarPorId(@PathVariable Long id) {
-		Estado estado = estadoRepository.buscarPorId(id);
+		Optional<Estado> estado = estadoRepository.findById(id);
 		
-		if (estado != null) {
-			return ResponseEntity.ok(estado);
+		if (estado.isPresent()) {
+			return ResponseEntity.ok(estado.get());
 		} 
 		
 		return ResponseEntity.notFound().build();
@@ -69,9 +70,9 @@ public class EstadoController {
 			estadoService.excluir(id);
 			return ResponseEntity.noContent().build();
 		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		} catch (EntidadeEmUsoException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 		}
 	}
 }

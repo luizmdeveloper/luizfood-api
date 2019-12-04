@@ -1,14 +1,11 @@
 package com.luizmariodev.luizfood.domain.repository;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.luizmariodev.luizfood.domain.model.Estado;
 
-public interface EstadoRepository {
+@Repository
+public interface EstadoRepository extends JpaRepository<Estado, Long> {
 
-	public List<Estado> buscarTodos();
-	public Estado buscarPorId(Long id);
-	public Estado salvar(Estado estado);
-	public void excluir(Long id);
-	
 }
