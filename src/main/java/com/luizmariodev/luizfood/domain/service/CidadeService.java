@@ -26,18 +26,18 @@ public class CidadeService {
 		Long estadoId = cidade.getEstado().getId();
 		Estado estado = buscarEstadoPorCodigo(estadoId);
 		cidade.setEstado(estado);
-		return cidadeRepository.salvar(cidade);
+		return cidadeRepository.save(cidade);
 	}
 	
 	public Cidade atualizar(Long id, Cidade cidade) {
 		Cidade cidadeSalvo = buscarCidadePorCodigo(id);
 		BeanUtils.copyProperties(cidade, cidadeSalvo, "id");
-		return cidadeRepository.salvar(cidadeSalvo);
+		return cidadeRepository.save(cidadeSalvo);
 	}
 	
 	public void excluir(Long id) {
 		try {
-			cidadeRepository.exlcuir(id);
+			cidadeRepository.deleteById(id);
 		} catch(EmptyResultDataAccessException e) {
 			throw new EntidadeNaoEncontradaException(String.format("Cidade com o código %d, não foi encontrada", id));
 		} catch (DataIntegrityViolationException e) {
@@ -46,12 +46,9 @@ public class CidadeService {
 	}
 	
 	private Cidade buscarCidadePorCodigo(Long cidadeId) {
-		Cidade cidade = cidadeRepository.buscarPorId(cidadeId);
-		
-		if (cidade == null) {
-			throw new EntidadeNaoEncontradaException(String.format("Cidade com o código %d, não foi encontrada", cidadeId));
-		}
-		
+		Cidade cidade = cidadeRepository.findById(cidadeId)
+				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Cidade com o código %d, não foi encontrada", cidadeId)));
+			
 		return cidade;
 	}
 

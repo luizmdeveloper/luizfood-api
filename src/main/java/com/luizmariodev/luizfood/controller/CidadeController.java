@@ -1,6 +1,7 @@
 package com.luizmariodev.luizfood.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ import com.luizmariodev.luizfood.domain.repository.CidadeRepository;
 import com.luizmariodev.luizfood.domain.service.CidadeService;
 
 @RestController
-@RequestMapping
+@RequestMapping("/cidades")
 public class CidadeController {
 
 	@Autowired
@@ -32,18 +33,18 @@ public class CidadeController {
 	
 	@GetMapping
 	public List<Cidade> buscarTodos() {
-		return cidadeRepository.buscarTodos();
+		return cidadeRepository.findAll();
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<?> buscarPorCodigo(@PathVariable Long id) {
-		Cidade cidade = cidadeRepository.buscarPorId(id);
+		Optional<Cidade> cidade = cidadeRepository.findById(id);
 		
-		if (cidade == null) {
-			return ResponseEntity.notFound().build();
-		} else {
+		if (cidade.isPresent()) {
 			return ResponseEntity.ok(cidade);
-		}
+		} 
+		
+		return ResponseEntity.notFound().build();
 	}
 	
 	@PostMapping
@@ -62,7 +63,7 @@ public class CidadeController {
 			Cidade cidadeSalva = cidadeService.atualizar(id, cidade);
 			return ResponseEntity.ok(cidadeSalva);
 		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
 	}
 	
