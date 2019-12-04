@@ -1,14 +1,11 @@
 package com.luizmariodev.luizfood.domain.repository;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.luizmariodev.luizfood.domain.model.Cozinha;
 
-public interface CozinhaRepository {
+@Repository
+public interface CozinhaRepository extends JpaRepository<Cozinha, Long> {
 	
-	public List<Cozinha> buscarTodos();
-	public Cozinha buscarPorId(Long id);
-	public Cozinha salvar(Cozinha cozinha);
-	public void excluir(Long id);
-
 }
