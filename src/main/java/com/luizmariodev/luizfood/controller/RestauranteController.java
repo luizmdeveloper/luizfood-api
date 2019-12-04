@@ -3,11 +3,13 @@ package com.luizmariodev.luizfood.controller;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.luizmariodev.luizfood.domain.exception.EntidadeEmUsoException;
 import com.luizmariodev.luizfood.domain.exception.EntidadeNaoEncontradaException;
 import com.luizmariodev.luizfood.domain.model.Restaurante;
 import com.luizmariodev.luizfood.domain.repository.RestauranteRepository;
@@ -35,18 +38,18 @@ public class RestauranteController {
 	
 	@GetMapping
 	public List<Restaurante> buscar(){
-		return restauranteRepository.buscarTodos();
+		return restauranteRepository.findAll();
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Restaurante> buscarPorId(@PathVariable Long id) {
-		Restaurante restaurante = restauranteRepository.buscarPorId(id);
+		Optional<Restaurante> restaurante = restauranteRepository.findById(id);
 		
-		if (restaurante == null) {
-			return ResponseEntity.notFound().build();			
-		} else {
-			return ResponseEntity.ok(restaurante);
+		if (restaurante.isPresent()) {
+			return ResponseEntity.ok(restaurante.get());
 		}
+		
+		return ResponseEntity.notFound().build();
 	}
 	
 	@PostMapping
@@ -71,15 +74,27 @@ public class RestauranteController {
 	
 	@PatchMapping("/{id}")
 	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Map<String, Object> dadosOrigem) {
-		Restaurante restauranteSalvo = restauranteRepository.buscarPorId(id);
+		Optional<Restaurante> restauranteSalvo = restauranteRepository.findById(id);
 		
-		if (restauranteSalvo == null) {
+		if (!restauranteSalvo.isPresent()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Restaurante com o código %d, não foi encontrado", id));
 		}
 		
-		merge(dadosOrigem, restauranteSalvo);
+		merge(dadosOrigem, restauranteSalvo.get());
 		
-		return atualizar(id, restauranteSalvo);
+		return atualizar(id, restauranteSalvo.get());
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> excluir(@PathVariable Long id) {
+		try {
+			restauranteService.excluir(id);
+			return ResponseEntity.noContent().build();
+		} catch (EntidadeNaoEncontradaException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		} catch (EntidadeEmUsoException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+		}
 	}
 
 	private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {
