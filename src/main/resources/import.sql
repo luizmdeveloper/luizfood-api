@@ -21,3 +21,9 @@ INSERT INTO estados (nome) VALUES ('Rio grande do Norte');
 /* inserção na tabelas de cidades */
 INSERT INTO cidades (nome, codigo_estado) VALUES ('Petrolina', 1);
 INSERT INTO cidades (nome, codigo_estado) VALUES ('Salgueiro', 1);
+
+
+/* inserção na tabelas de formas de pagmanetos */
+INSERT INTO formas_pagamentos (nome) VALUES ('Cartão de crédito');
+INSERT INTO formas_pagamentos (nome) VALUES ('Cartão de débito');
+INSERT INTO formas_pagamentos (nome) VALUES ('Dinheiro');
