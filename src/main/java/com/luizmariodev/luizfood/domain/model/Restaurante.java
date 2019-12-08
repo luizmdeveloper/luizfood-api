@@ -43,7 +43,7 @@ public class Restaurante {
 	private BigDecimal taxaEntrega;
 	
 	@ManyToOne
-	@JoinColumn(name="codigo_cozinha")
+	@JoinColumn(name="codigo_cozinha", nullable = true)
 	private Cozinha cozinha;
 	
 	@JsonIgnore
@@ -56,11 +56,11 @@ public class Restaurante {
 	@Column(name="data_ultima_atualizacao", nullable = true)
 	private LocalTime dataUltimaAtualizacao;
 	
-	@JsonIgnore
+//	@JsonIgnore
 	@Embedded
 	private Endereco endereco;
 	
-	@JsonIgnore
+//	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "restaurantes_formas_pagamentos",
 			   joinColumns = @JoinColumn(name="restaurante_id"),
