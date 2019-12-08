@@ -1,0 +1,1 @@
+ALTER TABLE usuarios ADD data_cadastro DATETIME NOT NULL;
