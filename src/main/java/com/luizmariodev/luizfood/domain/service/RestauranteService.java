@@ -34,7 +34,7 @@ public class RestauranteService {
 		Long cozinhaId = restaurante.getCozinha().getId();
 		Cozinha cozinhaSalva = buscarCozinhaPorCodigo(cozinhaId);
 		restaurante.setCozinha(cozinhaSalva);
-		BeanUtils.copyProperties(restaurante, restauranteSalvo, "id", "pagamentos", "endereco");
+		BeanUtils.copyProperties(restaurante, restauranteSalvo, "id", "pagamentos", "endereco", "dataCadastro", "dataUltimaAtualizacao");
 		return restauranteRepository.save(restauranteSalvo);
 	}
 	

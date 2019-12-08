@@ -1,6 +1,7 @@
 package com.luizmariodev.luizfood.domain.model;
 
 import java.math.BigDecimal;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -40,6 +44,16 @@ public class Restaurante {
 	@ManyToOne
 	@JoinColumn(name="codigo_cozinha")
 	private Cozinha cozinha;
+	
+	@JsonIgnore
+	@CreationTimestamp
+	@Column(name="data_cadastro", nullable = true)
+	private LocalTime dataCadastro;
+	
+	@JsonIgnore
+	@UpdateTimestamp
+	@Column(name="data_ultima_atualizacao", nullable = true)
+	private LocalTime dataUltimaAtualizacao;
 	
 	@JsonIgnore
 	@Embedded
