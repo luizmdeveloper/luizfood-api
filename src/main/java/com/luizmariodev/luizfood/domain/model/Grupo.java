@@ -31,9 +31,9 @@ public class Grupo {
 	
 	@JsonIgnore
 	@ManyToMany
-	@JoinTable(name="grupos_permissoes",
-			   joinColumns = @JoinColumn(name="gurpo_id"),
-			   inverseJoinColumns = @JoinColumn(name="permissao_id"))
+	@JoinTable(name="grupo_autorizacoes",
+			   joinColumns = @JoinColumn(name="codigo_grupo"),
+			   inverseJoinColumns = @JoinColumn(name="codigo_autorizacao"))
 	private List<Permissao> permissoes = new ArrayList<Permissao>();
 
 }
