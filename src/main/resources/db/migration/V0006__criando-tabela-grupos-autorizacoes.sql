@@ -1,4 +1,4 @@
-CREATE TABLE grupo_autorizacoes(
+CREATE TABLE grupos_autorizacoes(
 	codigo_grupo BIGINT NOT NULL,
     codigo_autorizacao BIGINT NOT NULL,
     
