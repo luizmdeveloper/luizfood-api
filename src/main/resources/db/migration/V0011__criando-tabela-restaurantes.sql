@@ -1,5 +1,6 @@
 CREATE TABLE restaurantes (
-	id BIGINT NOT NULL,
+	id BIGINT NOT NULL AUTO_INCREMENT,
+	nome VARCHAR(60) NOT NULL,
 	taxa_entrega NUMERIC(8,2) NOT NULL,
 	codigo_cozinha BIGINT NOT NULL,
 	data_cadastro DATETIME NOT NULL,
