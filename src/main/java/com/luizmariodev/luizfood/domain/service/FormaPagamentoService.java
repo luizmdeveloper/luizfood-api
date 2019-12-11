@@ -1,7 +1,5 @@
 package com.luizmariodev.luizfood.domain.service;
 
-import java.util.Optional;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,6 +14,9 @@ import com.luizmariodev.luizfood.domain.repository.FormaPagamentoRepository;
 @Service
 public class FormaPagamentoService {
 	
+	private static final String FORMA_DE_PAGAMENTO_NAO_PODE_EXCLUIDA = "Forma de pagamento com código %d, não pode ser excluída";
+	private static final String FORMA_DE_PAGAMENTO_NAO_ENCONTRADO = "Forma de pagamento com código %d, não foi encontrado";
+	
 	@Autowired
 	private FormaPagamentoRepository formaPagamentoRepository;
 
@@ -28,26 +29,21 @@ public class FormaPagamentoService {
 		BeanUtils.copyProperties(formaPagamento, formaPagamentoSalva, "id");
 		return formaPagamentoRepository.save(formaPagamentoSalva);
 	}
-	
-	public FormaPagamento buscarPorId(Long id) {
-		Optional<FormaPagamento> formaPagamentoSalva = formaPagamentoRepository.findById(id);
-		
-		if (!formaPagamentoSalva.isPresent()) {
-			throw new EntidadeNaoEncontradaException(String.format("Forma de pagamento com o códgo %d, não foi encontrada", id));
-		}
-		
-		return formaPagamentoSalva.get();
-	}
 
 	public void excluir(Long id) {
 		try {
 			formaPagamentoRepository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format("Forma de pagamento com código %d, não foi encontrado", id));
+			throw new EntidadeNaoEncontradaException(String.format(FORMA_DE_PAGAMENTO_NAO_ENCONTRADO, id));
 		} catch (DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException(String.format("Forma de pagamento com código %d, não pode ser excluída", id));
+			throw new EntidadeEmUsoException(String.format(FORMA_DE_PAGAMENTO_NAO_PODE_EXCLUIDA, id));
 		}
-		
 	}
-
+	
+	public FormaPagamento buscarPorId(Long id) {
+		FormaPagamento formaPagamento = formaPagamentoRepository.findById(id)
+					.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(FORMA_DE_PAGAMENTO_NAO_ENCONTRADO, id)));
+			
+		return formaPagamento;
+	}
 }

@@ -1,7 +1,6 @@
 package com.luizmariodev.luizfood.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.luizmariodev.luizfood.domain.exception.EntidadeEmUsoException;
-import com.luizmariodev.luizfood.domain.exception.EntidadeNaoEncontradaException;
 import com.luizmariodev.luizfood.domain.model.FormaPagamento;
 import com.luizmariodev.luizfood.domain.repository.FormaPagamentoRepository;
 import com.luizmariodev.luizfood.domain.service.FormaPagamentoService;
@@ -38,14 +35,8 @@ public class FormaPagamentoController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<FormaPagamento> buscarPorId(@PathVariable Long id) {
-		Optional<FormaPagamento> optionalPagamento = formaPagamentoRepository.findById(id);
-		
-		if (optionalPagamento.isPresent()) {
-			return ResponseEntity.ok(optionalPagamento.get());
-		}
-		
-		return ResponseEntity.notFound().build();
+	public FormaPagamento buscarPorId(@PathVariable Long id) {
+		return formaPagamentoService.buscarPorId(id);
 	}
 	
 	@PostMapping
@@ -55,24 +46,13 @@ public class FormaPagamentoController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody FormaPagamento formaPagamento) {		
-		try {
-			FormaPagamento formaPagamentoSalvo = formaPagamentoService.atualizar(id, formaPagamento);
-			return ResponseEntity.ok(formaPagamentoSalvo);
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		}		
+	public FormaPagamento atualizar(@PathVariable Long id, @RequestBody FormaPagamento formaPagamento) {		
+		return formaPagamentoService.atualizar(id, formaPagamento);
 	} 
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> apagar(@PathVariable Long id) {
-		try {
-			formaPagamentoService.excluir(id);
-			return ResponseEntity.noContent().build();
-		} catch (EntidadeNaoEncontradaException e) {
-			return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		} catch (EntidadeEmUsoException e) {
-			return  ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-		}		
+		formaPagamentoService.excluir(id);
+		return ResponseEntity.noContent().build();
 	}
 }
