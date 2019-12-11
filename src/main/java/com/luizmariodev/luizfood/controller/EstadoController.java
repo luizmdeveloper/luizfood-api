@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.luizmariodev.luizfood.domain.exception.EntidadeEmUsoException;
-import com.luizmariodev.luizfood.domain.exception.EntidadeNaoEncontradaException;
 import com.luizmariodev.luizfood.domain.model.Estado;
 import com.luizmariodev.luizfood.domain.repository.EstadoRepository;
 import com.luizmariodev.luizfood.domain.service.EstadoService;
@@ -55,13 +53,7 @@ public class EstadoController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> excluir(@PathVariable Long id) {
-		try {
-			estadoService.excluir(id);
-			return ResponseEntity.noContent().build();
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		} catch (EntidadeEmUsoException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-		}
+		estadoService.excluir(id);
+		return ResponseEntity.noContent().build();
 	}
 }
