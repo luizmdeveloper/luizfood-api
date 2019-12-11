@@ -1,7 +1,6 @@
 package com.luizmariodev.luizfood.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.luizmariodev.luizfood.domain.exception.EntidadeEmUsoException;
-import com.luizmariodev.luizfood.domain.exception.EntidadeNaoEncontradaException;
 import com.luizmariodev.luizfood.domain.model.Autorizacao;
 import com.luizmariodev.luizfood.domain.repository.AutorizacaoRepository;
 import com.luizmariodev.luizfood.domain.service.AutorizacaoService;
@@ -38,14 +35,8 @@ public class AutorizacaoController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Autorizacao> buscarPorId(@PathVariable Long id) {
-		Optional<Autorizacao> autorizacao = autorizacaoRepository.findById(id);
-		
-		if (autorizacao.isPresent()) {
-			return ResponseEntity.ok(autorizacao.get());
-		}
-		
-		return ResponseEntity.notFound().build();
+	public Autorizacao buscarPorId(@PathVariable Long id) {		
+		return autorizacaoService.buscarAutorizacaoPorId(id);
 	} 
 	
 	@PostMapping
@@ -55,25 +46,14 @@ public class AutorizacaoController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Autorizacao autorizacao) {
-		try {
-			Autorizacao autorizacaoSalva = autorizacaoService.atualizar(id, autorizacao);
-			return ResponseEntity.ok(autorizacaoSalva);
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		}
+	public Autorizacao atualizar(@PathVariable Long id, @RequestBody Autorizacao autorizacao) {
+		return autorizacaoService.atualizar(id, autorizacao);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> excluir(@PathVariable Long id) {
-		try {
-			autorizacaoService.excluir(id);
-			return ResponseEntity.noContent().build();
-		} catch (EntidadeEmUsoException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		}
+		autorizacaoService.excluir(id);
+		return ResponseEntity.noContent().build();
 	}
 
 }

@@ -38,7 +38,7 @@ public class AutorizacaoService {
 		
 	}
 
-	private Autorizacao buscarAutorizacaoPorId(Long id) {
+	public Autorizacao buscarAutorizacaoPorId(Long id) {
 		Autorizacao autorizacao = autorizacaoRepository.findById(id)
 				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Autorização com o código %d, não foi encontrado", id)));
 		
