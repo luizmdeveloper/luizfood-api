@@ -14,6 +14,9 @@ import com.luizmariodev.luizfood.domain.repository.AutorizacaoRepository;
 @Service
 public class AutorizacaoService {
 	
+	private static final String AUTORIZACAO_NAO_FOI_ENCONTRADA = "Autorização de código %d, não foi encontrada";
+	private static final String AUTORIZACAO_NAO_PODE_EXCLUIDA = "Autorização de código %d, não pode ser excluída";
+	
 	@Autowired
 	private AutorizacaoRepository autorizacaoRepository;
 	
@@ -31,16 +34,15 @@ public class AutorizacaoService {
 		try {
 			autorizacaoRepository.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException(String.format("Autorização de código %d, não pode ser excluída", id));
+			throw new EntidadeEmUsoException(String.format(AUTORIZACAO_NAO_PODE_EXCLUIDA, id));
 		} catch (EmptyResultDataAccessException e ) {
-			throw new EntidadeNaoEncontradaException(String.format("Autorização de código %d, não foi encontrada", id));
+			throw new EntidadeNaoEncontradaException(String.format(AUTORIZACAO_NAO_FOI_ENCONTRADA, id));
 		}
-		
 	}
 
 	public Autorizacao buscarAutorizacaoPorId(Long id) {
 		Autorizacao autorizacao = autorizacaoRepository.findById(id)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Autorização com o código %d, não foi encontrado", id)));
+				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(AUTORIZACAO_NAO_PODE_EXCLUIDA, id)));
 		
 		return autorizacao;
 	}
