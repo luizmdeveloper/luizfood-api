@@ -46,9 +46,8 @@ public class EstadoController {
 	}
 	
 	@PutMapping("/{id}")
-	public Estado atualizar(@PathVariable Long id, @RequestBody Estado estado) {		
-		Estado estadoSalvo = estadoService.atualizar(id, estado);		
-		return estadoSalvo;
+	public Estado atualizar(@PathVariable Long id, @RequestBody Estado estado) {				
+		return estadoService.atualizar(id, estado);
 	}
 	
 	@DeleteMapping("/{id}")
