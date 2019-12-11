@@ -27,6 +27,13 @@ public class EstadoService {
 		return estadoRepository.save(estadoAtual);
 	}
 	
+	public Estado buscarEstadoPorCodigo(Long id)  {
+		Estado estado = estadoRepository.findById(id)
+				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Estado de código %d, não foi encontrado", id)));
+			
+		return estado;
+	}
+	
 	public void excluir(Long estadoId) {
 		try {
 			estadoRepository.deleteById(estadoId);
@@ -35,12 +42,5 @@ public class EstadoService {
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(String.format("Estado com o código %d, não pode ser excluída", estadoId));
 		}
-	}
-
-	private Estado buscarEstadoPorCodigo(Long id)  {
-		Estado estado = estadoRepository.findById(id)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Estado de código %d, não foi encontrado", id)));
-			
-		return estado;
 	}
 }

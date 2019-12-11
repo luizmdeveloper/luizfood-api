@@ -11,7 +11,6 @@ import com.luizmariodev.luizfood.domain.exception.EntidadeNaoEncontradaException
 import com.luizmariodev.luizfood.domain.model.Cidade;
 import com.luizmariodev.luizfood.domain.model.Estado;
 import com.luizmariodev.luizfood.domain.repository.CidadeRepository;
-import com.luizmariodev.luizfood.domain.repository.EstadoRepository;
 
 @Service
 public class CidadeService {
@@ -20,7 +19,7 @@ public class CidadeService {
 	private CidadeRepository cidadeRepository;
 	
 	@Autowired
-	private EstadoRepository estadoRepository;
+	private EstadoService estadoService;
 	
 	public Cidade salvar(Cidade cidade) {
 		Long estadoId = cidade.getEstado().getId();
@@ -45,17 +44,14 @@ public class CidadeService {
 		}
 	}
 	
-	private Cidade buscarCidadePorCodigo(Long cidadeId) {
+	public Cidade buscarCidadePorCodigo(Long cidadeId) {
 		Cidade cidade = cidadeRepository.findById(cidadeId)
 				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Cidade com o código %d, não foi encontrada", cidadeId)));
 			
 		return cidade;
 	}
-
+	
 	private Estado buscarEstadoPorCodigo(Long estadoId) {
-		Estado estado = estadoRepository.findById(estadoId)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Estado de código %d, não foi encontrada", estadoId)));
-		
-		return estado;
+		return estadoService.buscarEstadoPorCodigo(estadoId);
 	}
 }

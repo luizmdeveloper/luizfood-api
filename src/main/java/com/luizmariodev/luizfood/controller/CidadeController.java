@@ -1,7 +1,6 @@
 package com.luizmariodev.luizfood.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,14 +36,8 @@ public class CidadeController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<?> buscarPorCodigo(@PathVariable Long id) {
-		Optional<Cidade> cidade = cidadeRepository.findById(id);
-		
-		if (cidade.isPresent()) {
-			return ResponseEntity.ok(cidade);
-		} 
-		
-		return ResponseEntity.notFound().build();
+	public Cidade buscarPorCodigo(@PathVariable Long id) {
+		return cidadeService.buscarCidadePorCodigo(id);
 	}
 	
 	@PostMapping
