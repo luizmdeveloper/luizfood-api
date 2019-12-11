@@ -32,11 +32,16 @@ public class CozinhaService {
 	}
 
 	public Cozinha atualizar(Long cozinhaId, Cozinha cozinha) {
-		Cozinha cozinhaAtual = cozinhaRepository.findById(cozinhaId)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Cozinha de código %d, não foi encontrada", cozinhaId)));
+		Cozinha cozinhaAtual = buscarCozinhaPorId(cozinhaId);
 		
 		BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
 		return cozinhaRepository.save(cozinhaAtual);
 	}
+	
+	public Cozinha buscarCozinhaPorId(Long cozinhaId) {
+		Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
+					.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Cozinha de código %d, não foi encontrada", cozinhaId)));
 
+		return cozinha;
+	} 
 }

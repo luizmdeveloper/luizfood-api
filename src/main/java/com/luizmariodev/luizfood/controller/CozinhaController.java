@@ -1,7 +1,6 @@
 package com.luizmariodev.luizfood.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,14 +37,8 @@ public class CozinhaController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Cozinha> buscarPorCodigo(@PathVariable Long id) {
-		Optional<Cozinha> cozinha = cozinhaRepository.findById(id);
-		
-		if (cozinha.isPresent()) {
-			return ResponseEntity.ok(cozinha.get());
-		}
-		
-		return ResponseEntity.notFound().build();
+	public Cozinha buscarPorCodigo(@PathVariable Long id) {		
+		return cozinhaService.buscarCozinhaPorId(id);
 	}
 	
 	@PostMapping
@@ -55,24 +48,13 @@ public class CozinhaController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Cozinha cozinha){
-		try {
-			Cozinha cozinhaSalva = cozinhaService.atualizar(id, cozinha);
-			return ResponseEntity.ok().body(cozinhaSalva);
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		}
+	public Cozinha atualizar(@PathVariable Long id, @RequestBody Cozinha cozinha){
+		return cozinhaService.atualizar(id, cozinha);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> excluir(@PathVariable Long id) {
-		try {
-			cozinhaService.excluir(id);
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-		} catch(EntidadeNaoEncontradaException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		} catch (EntidadeEmUsoException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-		}
+		cozinhaService.excluir(id);
+		return ResponseEntity.noContent().build();
 	}
 }
