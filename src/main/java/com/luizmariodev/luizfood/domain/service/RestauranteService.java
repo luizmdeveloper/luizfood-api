@@ -10,17 +10,19 @@ import com.luizmariodev.luizfood.domain.exception.EntidadeEmUsoException;
 import com.luizmariodev.luizfood.domain.exception.EntidadeNaoEncontradaException;
 import com.luizmariodev.luizfood.domain.model.Cozinha;
 import com.luizmariodev.luizfood.domain.model.Restaurante;
-import com.luizmariodev.luizfood.domain.repository.CozinhaRepository;
 import com.luizmariodev.luizfood.domain.repository.RestauranteRepository;
 
 @Service
 public class RestauranteService {
 	
+	private static final String RESTAURANTE_NAO_ENCONTRADO = "Não existe restaurante cadastrado com o código %d";
+	private static final String RESTURANTE_NAO_PODE_EXCLUIDO = "Resturante de código %d, não pode ser excluído";
+
 	@Autowired
 	private RestauranteRepository restauranteRepository;
 	
 	@Autowired
-	private CozinhaRepository cozinhaRepository;
+	private CozinhaService cozinhaService;
 	
 	public Restaurante salvar(Restaurante restaurante) {
 		Long cozinhaId = restaurante.getCozinha().getId();
@@ -42,24 +44,19 @@ public class RestauranteService {
 		try {
 			restauranteRepository.deleteById(id);			
 		} catch (DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException(String.format("Resturante de código %d, não pode ser excluído", id));
+			throw new EntidadeEmUsoException(String.format(RESTURANTE_NAO_PODE_EXCLUIDO, id));
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format("Não existe restaurante cadastrado com o código %d", id));
+			throw new EntidadeNaoEncontradaException(String.format(RESTAURANTE_NAO_ENCONTRADO, id));
 		}
 	}
 	
-	private Restaurante buscarRestaurantePorCodigo(Long restauranteId) {
+	public Restaurante buscarRestaurantePorCodigo(Long restauranteId) {
 		Restaurante restaurante = restauranteRepository.findById(restauranteId)
-					.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Não existe restaurante cadastrado com o código %d", restauranteId)));		
+					.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(RESTAURANTE_NAO_ENCONTRADO, restauranteId)));		
 		return restaurante;
 	}
 	
-	private Cozinha buscarCozinhaPorCodigo(Long cozinhaId) {
-		Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
-					.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Não existe cozinha cadastrada com o código %d", cozinhaId)));
-				
-		return cozinha;
+	private Cozinha buscarCozinhaPorCodigo(Long cozinhaId) {				
+		return cozinhaService.buscarCozinhaPorId(cozinhaId);
 	}
-
-
 }
