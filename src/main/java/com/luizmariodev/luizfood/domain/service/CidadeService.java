@@ -15,6 +15,9 @@ import com.luizmariodev.luizfood.domain.repository.CidadeRepository;
 @Service
 public class CidadeService {
 	
+	private static final String CIDADE_NAO_EXCLUIDA = "Cidade com o código %d, não pode ser excluída";
+	private static final String CIDADE_NAO_FOI_ENCONTRADA = "Cidade com o código %d, não foi encontrada";
+
 	@Autowired
 	private CidadeRepository cidadeRepository;
 	
@@ -38,15 +41,15 @@ public class CidadeService {
 		try {
 			cidadeRepository.deleteById(id);
 		} catch(EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format("Cidade com o código %d, não foi encontrada", id));
+			throw new EntidadeNaoEncontradaException(String.format(CIDADE_NAO_FOI_ENCONTRADA, id));
 		} catch (DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException(String.format("Cidade com o código %d, não pode ser excluída", id));
+			throw new EntidadeEmUsoException(String.format(CIDADE_NAO_EXCLUIDA, id));
 		}
 	}
 	
 	public Cidade buscarCidadePorCodigo(Long cidadeId) {
 		Cidade cidade = cidadeRepository.findById(cidadeId)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Cidade com o código %d, não foi encontrada", cidadeId)));
+				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(CIDADE_NAO_FOI_ENCONTRADA, cidadeId)));
 			
 		return cidade;
 	}
