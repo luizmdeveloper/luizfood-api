@@ -48,7 +48,7 @@ public class CidadeController {
 	@PutMapping("/{id}")
 	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Cidade cidade) {
 		Cidade cidadeSalva = cidadeService.atualizar(id, cidade);
-		return ResponseEntity.ok(cidadeSalva);
+		return ResponseEntity.ok(cidadeSalva);		
 	}
 	
 	@DeleteMapping("/{id}")
