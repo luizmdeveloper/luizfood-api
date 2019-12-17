@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.luizmariodev.luizfood.domain.exception.EntidadeEmUsoException;
 import com.luizmariodev.luizfood.domain.exception.EntidadeNaoEncontradaException;
+import com.luizmariodev.luizfood.domain.exception.NegocioException;
 import com.luizmariodev.luizfood.domain.model.Cidade;
 import com.luizmariodev.luizfood.domain.model.Estado;
 import com.luizmariodev.luizfood.domain.repository.CidadeRepository;
@@ -26,8 +27,12 @@ public class CidadeService {
 	
 	public Cidade salvar(Cidade cidade) {
 		Long estadoId = cidade.getEstado().getId();
-		Estado estado = buscarEstadoPorCodigo(estadoId);
-		cidade.setEstado(estado);
+		try {
+			Estado estado = buscarEstadoPorCodigo(estadoId);
+			cidade.setEstado(estado);
+		} catch (EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
 		return cidadeRepository.save(cidade);
 	}
 	
