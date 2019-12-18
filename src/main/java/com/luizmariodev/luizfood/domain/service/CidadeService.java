@@ -6,8 +6,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.luizmariodev.luizfood.domain.exception.CidadeNaoEncontradaException;
 import com.luizmariodev.luizfood.domain.exception.EntidadeEmUsoException;
-import com.luizmariodev.luizfood.domain.exception.EntidadeNaoEncontradaException;
+import com.luizmariodev.luizfood.domain.exception.EstadoNaoEncontradoException;
 import com.luizmariodev.luizfood.domain.exception.NegocioException;
 import com.luizmariodev.luizfood.domain.model.Cidade;
 import com.luizmariodev.luizfood.domain.model.Estado;
@@ -17,7 +18,6 @@ import com.luizmariodev.luizfood.domain.repository.CidadeRepository;
 public class CidadeService {
 	
 	private static final String CIDADE_NAO_EXCLUIDA = "Cidade com o código %d, não pode ser excluída";
-	private static final String CIDADE_NAO_FOI_ENCONTRADA = "Cidade com o código %d, não foi encontrada";
 
 	@Autowired
 	private CidadeRepository cidadeRepository;
@@ -30,14 +30,15 @@ public class CidadeService {
 		try {
 			Estado estado = buscarEstadoPorCodigo(estadoId);
 			cidade.setEstado(estado);
-		} catch (EntidadeNaoEncontradaException e) {
-			throw new NegocioException(e.getMessage());
+		} catch (EstadoNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage(), e);
 		}
 		return cidadeRepository.save(cidade);
 	}
 	
 	public Cidade atualizar(Long id, Cidade cidade) {
 		Cidade cidadeSalvo = buscarCidadePorCodigo(id);
+		cidadeSalvo.setEstado(buscarEstadoPorCodigo(cidade.getEstado().getId()));
 		BeanUtils.copyProperties(cidade, cidadeSalvo, "id");
 		return cidadeRepository.save(cidadeSalvo);
 	}
@@ -46,7 +47,7 @@ public class CidadeService {
 		try {
 			cidadeRepository.deleteById(id);
 		} catch(EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format(CIDADE_NAO_FOI_ENCONTRADA, id));
+			throw new CidadeNaoEncontradaException(id);
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(String.format(CIDADE_NAO_EXCLUIDA, id));
 		}
@@ -54,7 +55,7 @@ public class CidadeService {
 	
 	public Cidade buscarCidadePorCodigo(Long cidadeId) {
 		Cidade cidade = cidadeRepository.findById(cidadeId)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(CIDADE_NAO_FOI_ENCONTRADA, cidadeId)));
+				.orElseThrow(() -> new CidadeNaoEncontradaException(cidadeId));
 			
 		return cidade;
 	}
