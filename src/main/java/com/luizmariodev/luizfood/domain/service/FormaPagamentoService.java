@@ -7,7 +7,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.luizmariodev.luizfood.domain.exception.EntidadeEmUsoException;
-import com.luizmariodev.luizfood.domain.exception.EntidadeNaoEncontradaException;
+import com.luizmariodev.luizfood.domain.exception.FormaPagamentoNaoEncontradaException;
 import com.luizmariodev.luizfood.domain.model.FormaPagamento;
 import com.luizmariodev.luizfood.domain.repository.FormaPagamentoRepository;
 
@@ -15,7 +15,6 @@ import com.luizmariodev.luizfood.domain.repository.FormaPagamentoRepository;
 public class FormaPagamentoService {
 	
 	private static final String FORMA_DE_PAGAMENTO_NAO_PODE_EXCLUIDA = "Forma de pagamento com código %d, não pode ser excluída";
-	private static final String FORMA_DE_PAGAMENTO_NAO_ENCONTRADO = "Forma de pagamento com código %d, não foi encontrado";
 	
 	@Autowired
 	private FormaPagamentoRepository formaPagamentoRepository;
@@ -34,7 +33,7 @@ public class FormaPagamentoService {
 		try {
 			formaPagamentoRepository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format(FORMA_DE_PAGAMENTO_NAO_ENCONTRADO, id));
+			throw new FormaPagamentoNaoEncontradaException(id);
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(String.format(FORMA_DE_PAGAMENTO_NAO_PODE_EXCLUIDA, id));
 		}
@@ -42,7 +41,7 @@ public class FormaPagamentoService {
 	
 	public FormaPagamento buscarPorId(Long id) {
 		FormaPagamento formaPagamento = formaPagamentoRepository.findById(id)
-					.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(FORMA_DE_PAGAMENTO_NAO_ENCONTRADO, id)));
+					.orElseThrow(() -> new FormaPagamentoNaoEncontradaException(id));
 			
 		return formaPagamento;
 	}
