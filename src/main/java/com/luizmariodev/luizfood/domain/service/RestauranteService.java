@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.luizmariodev.luizfood.domain.exception.EntidadeEmUsoException;
 import com.luizmariodev.luizfood.domain.exception.EntidadeNaoEncontradaException;
+import com.luizmariodev.luizfood.domain.exception.RestauranteNaoEncontradoException;
 import com.luizmariodev.luizfood.domain.model.Cozinha;
 import com.luizmariodev.luizfood.domain.model.Restaurante;
 import com.luizmariodev.luizfood.domain.repository.RestauranteRepository;
@@ -15,7 +16,6 @@ import com.luizmariodev.luizfood.domain.repository.RestauranteRepository;
 @Service
 public class RestauranteService {
 	
-	private static final String RESTAURANTE_NAO_ENCONTRADO = "Não existe restaurante cadastrado com o código %d";
 	private static final String RESTURANTE_NAO_PODE_EXCLUIDO = "Resturante de código %d, não pode ser excluído";
 
 	@Autowired
@@ -46,13 +46,13 @@ public class RestauranteService {
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(String.format(RESTURANTE_NAO_PODE_EXCLUIDO, id));
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format(RESTAURANTE_NAO_ENCONTRADO, id));
+			throw new RestauranteNaoEncontradoException(id);
 		}
 	}
 	
 	public Restaurante buscarRestaurantePorCodigo(Long restauranteId) {
 		Restaurante restaurante = restauranteRepository.findById(restauranteId)
-					.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(RESTAURANTE_NAO_ENCONTRADO, restauranteId)));		
+					.orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));		
 		return restaurante;
 	}
 	
