@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.luizmariodev.luizfood.domain.exception.EstadoNaoEncontradoException;
 import com.luizmariodev.luizfood.domain.model.Estado;
 import com.luizmariodev.luizfood.domain.repository.EstadoRepository;
 import com.luizmariodev.luizfood.domain.service.EstadoService;
@@ -48,11 +47,7 @@ public class EstadoController {
 	
 	@PutMapping("/{id}")
 	public Estado atualizar(@PathVariable Long id, @RequestBody Estado estado) {
-		try {
-			return estadoService.atualizar(id, estado);			
-		} catch (EstadoNaoEncontradoException e) {
-			throw new EstadoNaoEncontradoException(id);
-		}
+		return estadoService.atualizar(id, estado);			
 	}
 	
 	@DeleteMapping("/{id}")
