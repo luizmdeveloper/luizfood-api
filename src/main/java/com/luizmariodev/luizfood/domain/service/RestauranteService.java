@@ -7,7 +7,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.luizmariodev.luizfood.domain.exception.EntidadeEmUsoException;
-import com.luizmariodev.luizfood.domain.exception.EntidadeNaoEncontradaException;
 import com.luizmariodev.luizfood.domain.exception.RestauranteNaoEncontradoException;
 import com.luizmariodev.luizfood.domain.model.Cozinha;
 import com.luizmariodev.luizfood.domain.model.Restaurante;
