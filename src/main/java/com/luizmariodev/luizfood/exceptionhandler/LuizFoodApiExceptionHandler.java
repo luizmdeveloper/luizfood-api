@@ -13,6 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import com.luizmariodev.luizfood.domain.exception.EntidadeEmUsoException;
 import com.luizmariodev.luizfood.domain.exception.EntidadeNaoEncontradaException;
 import com.luizmariodev.luizfood.domain.exception.NegocioException;
@@ -51,6 +52,8 @@ public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler 
 		
 		if (causaRaiz instanceof InvalidFormatException) {
 			return handleInvalidFormatException((InvalidFormatException) causaRaiz, headers, status, request);
+		} else if (causaRaiz instanceof PropertyBindingException) {
+			return handlePropertyBindingException((PropertyBindingException) causaRaiz, headers, status, request);
 		}
 		
 		String mensagemDetalhe = "Corpo da requisição incropreensível. Por favor, verifique e tente mais tarde";
@@ -58,17 +61,6 @@ public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler 
 		return handleExceptionInternal(ex, problema, headers, status, request);
 	}
 	
-	private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-		String path = ex.getPath().stream()
-					.map(erro -> erro.getFieldName())
-					.collect(Collectors.joining("."));
-		
-		String mensagemDetalhe = String.format("A propriedade '%s' recebeu o valor '%s' porém, o valor é inválido. Para continuar, " + 
-											   " corrija o tipo de dado para um tipo compatível com '%s'", path, ex.getValue(), ex.getTargetType().getSimpleName());
-		var problema = criarProblemaBuilder(TipoProblema.MENSAGEM_INCROPREENSIVEL, status, mensagemDetalhe).build();
-		return handleExceptionInternal(ex, problema, headers, status, request);
-	}
-
 	@Override
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -87,6 +79,29 @@ public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler 
 		
 		return super.handleExceptionInternal(ex, body, headers, status, request);
 	}
+	
+	private ResponseEntity<Object> handlePropertyBindingException(PropertyBindingException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		String path = ex.getPath().stream()
+				.map(erro -> erro.getFieldName())
+				.collect(Collectors.joining("."));
+	
+		String mensagemDetalhe = String.format("A propriedade '%s' não existe nessa entidade. Para continuar," + 
+											   " remova-a e envie novamente", path);
+		var problema = criarProblemaBuilder(TipoProblema.MENSAGEM_INCROPREENSIVEL, status, mensagemDetalhe).build();
+		return handleExceptionInternal(ex, problema, headers, status, request);
+	}
+
+	private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+		String path = ex.getPath().stream()
+					.map(erro -> erro.getFieldName())
+					.collect(Collectors.joining("."));
+		
+		String mensagemDetalhe = String.format("A propriedade '%s' recebeu o valor '%s' porém, o valor é inválido. Para continuar, " + 
+											   " corrija o tipo de dado para um tipo compatível com '%s'", path, ex.getValue(), ex.getTargetType().getSimpleName());
+		var problema = criarProblemaBuilder(TipoProblema.MENSAGEM_INCROPREENSIVEL, status, mensagemDetalhe).build();
+		return handleExceptionInternal(ex, problema, headers, status, request);
+	}	
 	
 	private Problema.ProblemaBuilder criarProblemaBuilder(TipoProblema tipoProblema, HttpStatus status, String detalhe){
 		return new Problema.ProblemaBuilder()
