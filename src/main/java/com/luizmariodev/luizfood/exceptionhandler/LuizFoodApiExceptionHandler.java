@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
@@ -22,6 +23,12 @@ import com.luizmariodev.luizfood.domain.exception.NegocioException;
 
 @ControllerAdvice
 public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler {
+	
+	@Override
+	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,HttpStatus status, WebRequest request) {
+		var problema = criarProblemaBuilder(TipoProblema.RECURSO_NAO_ENCONTRADO, status, String.format("O recurso '%s', que você tentou acessar, não existe", ex.getRequestURL())).build();
+		return handleExceptionInternal(ex, problema, headers, status, request);
+	}
 	
 	@Override
 	protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
