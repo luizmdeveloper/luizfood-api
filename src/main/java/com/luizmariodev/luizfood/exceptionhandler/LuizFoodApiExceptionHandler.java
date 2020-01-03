@@ -3,6 +3,7 @@ package com.luizmariodev.luizfood.exceptionhandler;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
@@ -20,30 +22,15 @@ import com.luizmariodev.luizfood.domain.exception.NegocioException;
 
 @ControllerAdvice
 public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler {
-		
 	
-	@ExceptionHandler(EntidadeNaoEncontradaException.class)
-	private ResponseEntity<?> handleEntidadeNaoEncontradaException(EntidadeNaoEncontradaException e, WebRequest request) {
-		HttpStatus status = HttpStatus.NOT_FOUND;
-		var problema = criarProblemaBuilder(TipoProblema.ENTIDADE_NAO_ENCONTRADA, status, e.getMessage()).build();
+	@Override
+	protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 		
-		return handleExceptionInternal(e, problema, new HttpHeaders(), status, request);
-	}
-	
-	@ExceptionHandler(EntidadeEmUsoException.class)
-	private ResponseEntity<?> handleEntidadeEmUsoException(EntidadeEmUsoException e, WebRequest request) {
-		HttpStatus status = HttpStatus.CONFLICT;
-		var problema = criarProblemaBuilder(TipoProblema.ENTIDADE_EM_USO, status, e.getMessage()).build();
+		if (ex instanceof MethodArgumentTypeMismatchException) {
+			return handleMethodArgumentTypeMismatchException((MethodArgumentTypeMismatchException) ex, headers, status, request);
+		}
 		
-		return handleExceptionInternal(e, problema, new HttpHeaders(), status, request);
-	}
-	
-	@ExceptionHandler(NegocioException.class)
-	private ResponseEntity<?> handleNegocioException(NegocioException e, WebRequest request) {
-		HttpStatus status = HttpStatus.BAD_REQUEST;
-		var problema = criarProblemaBuilder(TipoProblema.ERRO_NEGOCIO, status, e.getMessage()).build();
-		
-		return handleExceptionInternal(e, problema, new HttpHeaders(), status, request);
+		return super.handleTypeMismatch(ex, headers, status, request);
 	}
 	
 	@Override
@@ -78,6 +65,38 @@ public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler 
 		} 
 		
 		return super.handleExceptionInternal(ex, body, headers, status, request);
+	}
+
+	
+	@ExceptionHandler(EntidadeNaoEncontradaException.class)
+	private ResponseEntity<?> handleEntidadeNaoEncontradaException(EntidadeNaoEncontradaException e, WebRequest request) {
+		HttpStatus status = HttpStatus.NOT_FOUND;
+		var problema = criarProblemaBuilder(TipoProblema.ENTIDADE_NAO_ENCONTRADA, status, e.getMessage()).build();
+		
+		return handleExceptionInternal(e, problema, new HttpHeaders(), status, request);
+	}
+	
+	@ExceptionHandler(EntidadeEmUsoException.class)
+	private ResponseEntity<?> handleEntidadeEmUsoException(EntidadeEmUsoException e, WebRequest request) {
+		HttpStatus status = HttpStatus.CONFLICT;
+		var problema = criarProblemaBuilder(TipoProblema.ENTIDADE_EM_USO, status, e.getMessage()).build();
+		
+		return handleExceptionInternal(e, problema, new HttpHeaders(), status, request);
+	}
+	
+	@ExceptionHandler(NegocioException.class)
+	private ResponseEntity<?> handleNegocioException(NegocioException e, WebRequest request) {
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		var problema = criarProblemaBuilder(TipoProblema.ERRO_NEGOCIO, status, e.getMessage()).build();
+		
+		return handleExceptionInternal(e, problema, new HttpHeaders(), status, request);
+	}
+	
+	private ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e, HttpHeaders headers, HttpStatus status, WebRequest request) {		
+		String mensagemDetalhe = String.format("O parâmetro de URL '%s' recebeu o valor '%s', que é um tipo inválido. Coirrija e informe um valor compatível com o tipo '%s'", e.getName(), e.getValue(), e.getRequiredType().getSimpleName()); 
+		var problema = criarProblemaBuilder(TipoProblema.PARAMETRO_INVALIDO, status, mensagemDetalhe).build();
+		
+		return handleExceptionInternal(e, problema, headers, status, request);
 	}
 	
 	private ResponseEntity<Object> handlePropertyBindingException(PropertyBindingException ex,

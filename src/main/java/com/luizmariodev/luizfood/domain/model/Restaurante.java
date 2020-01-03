@@ -48,12 +48,12 @@ public class Restaurante {
 	
 	@JsonIgnore
 	@CreationTimestamp
-	@Column(name="data_cadastro", nullable = true)
+	@Column(name="data_cadastro", nullable = true, columnDefinition = "datetime")
 	private LocalTime dataCadastro;
 	
 	@JsonIgnore
 	@UpdateTimestamp
-	@Column(name="data_ultima_atualizacao", nullable = true)
+	@Column(name="data_ultima_atualizacao", nullable = true, columnDefinition = "datetime")
 	private LocalTime dataUltimaAtualizacao;
 	
 //	@JsonIgnore
