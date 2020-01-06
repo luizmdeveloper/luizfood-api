@@ -73,7 +73,15 @@ public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler 
 		
 		return super.handleExceptionInternal(ex, body, headers, status, request);
 	}
-
+	
+	@ExceptionHandler(Exception.class)
+	private ResponseEntity<Object> handleExceptionNaoTratada(Exception e, WebRequest request) {
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		String mensagem = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se o problema persistir, entre em contato com o administrador do sistema.";
+		var problema = criarProblemaBuilder(TipoProblema.ERRO_DE_SISTEMA, status, mensagem).build();
+		
+		return handleExceptionInternal(e, problema, new HttpHeaders(), status, request);
+	}
 	
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
 	private ResponseEntity<?> handleEntidadeNaoEncontradaException(EntidadeNaoEncontradaException e, WebRequest request) {

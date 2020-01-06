@@ -10,7 +10,8 @@ public enum TipoProblema {
 	ERRO_NEGOCIO("/erro-negocio", "Violação de regra de negócio"), 
 	MENSAGEM_INCROPREENSIVEL("/mensagem-incropreensivel", "Mensagem incropreensível"),
 	PARAMETRO_INVALIDO("/parametro-invalido", "Parâmetro inválido"),
-	RECURSO_NAO_ENCONTRADO("/recurso-nao-encontrado", "Recurso não foi encontrado");
+	RECURSO_NAO_ENCONTRADO("/recurso-nao-encontrado", "Recurso não foi encontrado"),
+	ERRO_DE_SISTEMA("/erro-de-sistema", "Erro de sistema");
 	
 	private String titulo;
 	private String path;
