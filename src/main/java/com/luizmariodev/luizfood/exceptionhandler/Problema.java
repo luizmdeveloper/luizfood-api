@@ -1,6 +1,7 @@
 package com.luizmariodev.luizfood.exceptionhandler;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -18,7 +19,16 @@ public class Problema {
 	private String titulo;
 	private String detalhe;
 	private LocalDateTime dataHora;
-	
 	private String mensagemUsuario;
+	private List<Propriedade> propriedades;
+	
+	@Getter
+	@Builder
+	public static class Propriedade {
+		
+		private String nome;
+		private String mensagemUsuario;
+		
+	}
 
 }
