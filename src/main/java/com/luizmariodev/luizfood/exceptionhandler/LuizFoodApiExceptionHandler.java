@@ -1,5 +1,6 @@
 package com.luizmariodev.luizfood.exceptionhandler;
 
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -24,9 +25,14 @@ import com.luizmariodev.luizfood.domain.exception.NegocioException;
 @ControllerAdvice
 public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler {
 	
+	public static final String MENSAGEM_ERRO_GENERICO_USUARIO = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se o problema persistir," +
+															    " entre em contato com o administrador do sistema.";
+
 	@Override
 	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,HttpStatus status, WebRequest request) {
-		var problema = criarProblemaBuilder(TipoProblema.RECURSO_NAO_ENCONTRADO, status, String.format("O recurso '%s', que você tentou acessar, não existe", ex.getRequestURL())).build();
+		var problema = criarProblemaBuilder(TipoProblema.RECURSO_NAO_ENCONTRADO, status, String.format("O recurso '%s', que você tentou acessar, não existe", ex.getRequestURL()))
+				.mensagemUsuario(String.format("O recurso '%s', que você tentou acessar, não existe", ex.getRequestURL()))
+				.build();
 		return handleExceptionInternal(ex, problema, headers, status, request);
 	}
 	
@@ -51,7 +57,10 @@ public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler 
 		}
 		
 		String mensagemDetalhe = "Corpo da requisição incropreensível. Por favor, verifique e tente mais tarde";
-		var problema = criarProblemaBuilder(TipoProblema.MENSAGEM_INCROPREENSIVEL, status, mensagemDetalhe).build();
+		String mensagemUauario = "Não obtive êxito em converter o(s) valore(s) informado(s). Por favor, verifique e tente mais tarde";
+		var problema = criarProblemaBuilder(TipoProblema.MENSAGEM_INCROPREENSIVEL, status, mensagemDetalhe)
+						.mensagemUsuario(mensagemUauario)
+						.build();
 		return handleExceptionInternal(ex, problema, headers, status, request);
 	}
 	
@@ -63,11 +72,13 @@ public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler 
 			body = Problema.builder()
 					.status(status.value())
 					.titulo(status.getReasonPhrase())
+					.dataHora(LocalDateTime.now())
 					.build();
 		} else if (body instanceof String) {
 			body = Problema.builder()
 					.status(status.value())
 					.detalhe((String) body)
+					.dataHora(LocalDateTime.now())
 					.build();
 		} 
 		
@@ -77,8 +88,10 @@ public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler 
 	@ExceptionHandler(Exception.class)
 	private ResponseEntity<Object> handleExceptionNaoTratada(Exception e, WebRequest request) {
 		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-		String mensagem = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se o problema persistir, entre em contato com o administrador do sistema.";
-		var problema = criarProblemaBuilder(TipoProblema.ERRO_DE_SISTEMA, status, mensagem).build();
+		String mensagem = MENSAGEM_ERRO_GENERICO_USUARIO;
+		var problema = criarProblemaBuilder(TipoProblema.ERRO_DE_SISTEMA, status, mensagem)
+						.mensagemUsuario(MENSAGEM_ERRO_GENERICO_USUARIO)
+						.build();
 		
 		return handleExceptionInternal(e, problema, new HttpHeaders(), status, request);
 	}
@@ -102,14 +115,18 @@ public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler 
 	@ExceptionHandler(NegocioException.class)
 	private ResponseEntity<?> handleNegocioException(NegocioException e, WebRequest request) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
-		var problema = criarProblemaBuilder(TipoProblema.ERRO_NEGOCIO, status, e.getMessage()).build();
+		var problema = criarProblemaBuilder(TipoProblema.ERRO_NEGOCIO, status, e.getMessage())
+						.mensagemUsuario(e.getMessage())
+						.build();
 		
 		return handleExceptionInternal(e, problema, new HttpHeaders(), status, request);
 	}
 	
 	private ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e, HttpHeaders headers, HttpStatus status, WebRequest request) {		
 		String mensagemDetalhe = String.format("O parâmetro de URL '%s' recebeu o valor '%s', que é um tipo inválido. Coirrija e informe um valor compatível com o tipo '%s'", e.getName(), e.getValue(), e.getRequiredType().getSimpleName()); 
-		var problema = criarProblemaBuilder(TipoProblema.PARAMETRO_INVALIDO, status, mensagemDetalhe).build();
+		var problema = criarProblemaBuilder(TipoProblema.PARAMETRO_INVALIDO, status, mensagemDetalhe)
+						.mensagemUsuario(mensagemDetalhe)
+						.build();
 		
 		return handleExceptionInternal(e, problema, headers, status, request);
 	}
@@ -122,7 +139,12 @@ public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler 
 	
 		String mensagemDetalhe = String.format("A propriedade '%s' não existe nessa entidade. Para continuar," + 
 											   " remova-a e envie novamente", path);
-		var problema = criarProblemaBuilder(TipoProblema.MENSAGEM_INCROPREENSIVEL, status, mensagemDetalhe).build();
+		String mensagemUsuario = String.format("O campo '%s' não existe nessa entidade. Para continuar," + 
+		   	       							   " remova-a e envie novamente", path);
+		
+		var problema = criarProblemaBuilder(TipoProblema.MENSAGEM_INCROPREENSIVEL, status, mensagemDetalhe)
+						.mensagemUsuario(mensagemUsuario)
+						.build();
 		return handleExceptionInternal(ex, problema, headers, status, request);
 	}
 
@@ -133,7 +155,13 @@ public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler 
 		
 		String mensagemDetalhe = String.format("A propriedade '%s' recebeu o valor '%s' porém, o valor é inválido. Para continuar, " + 
 											   " corrija o tipo de dado para um tipo compatível com '%s'", path, ex.getValue(), ex.getTargetType().getSimpleName());
-		var problema = criarProblemaBuilder(TipoProblema.MENSAGEM_INCROPREENSIVEL, status, mensagemDetalhe).build();
+		
+		String mensagemUsuario = String.format("O campo '%s' recebeu o valor '%s' porém, este valor é inválido. Para continuar, " + 
+		   		   							   " corrija-o e envie novamente", path, ex.getValue());
+		
+		var problema = criarProblemaBuilder(TipoProblema.MENSAGEM_INCROPREENSIVEL, status, mensagemDetalhe)
+						.mensagemUsuario(mensagemUsuario)
+						.build();
 		return handleExceptionInternal(ex, problema, headers, status, request);
 	}	
 	
@@ -142,6 +170,8 @@ public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler 
 					.status(status.value())
 					.tipo(tipoProblema.getPath())
 					.titulo(tipoProblema.getTitulo())
-					.detalhe(detalhe);
+					.detalhe(detalhe)
+					.dataHora(LocalDateTime.now());
 	}
 }
+
