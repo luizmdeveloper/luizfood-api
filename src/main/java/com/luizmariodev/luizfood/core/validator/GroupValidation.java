@@ -1,4 +1,4 @@
-package com.luizmariodev.luizfood;
+package com.luizmariodev.luizfood.core.validator;
 
 public interface GroupValidation {
 	
