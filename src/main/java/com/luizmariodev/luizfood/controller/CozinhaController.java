@@ -2,6 +2,8 @@ package com.luizmariodev.luizfood.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,12 +43,12 @@ public class CozinhaController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cozinha salvar(@RequestBody Cozinha cozinha) {
+	public Cozinha salvar(@RequestBody @Valid Cozinha cozinha) {
 		return cozinhaService.salvar(cozinha);
 	}
 	
 	@PutMapping("/{id}")
-	public Cozinha atualizar(@PathVariable Long id, @RequestBody Cozinha cozinha){
+	public Cozinha atualizar(@PathVariable Long id, @RequestBody @Valid Cozinha cozinha){
 		return cozinhaService.atualizar(id, cozinha);
 	}
 	
