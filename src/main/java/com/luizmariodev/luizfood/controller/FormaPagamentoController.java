@@ -2,6 +2,8 @@ package com.luizmariodev.luizfood.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,12 +43,12 @@ public class FormaPagamentoController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public FormaPagamento salvar(@RequestBody FormaPagamento formaPagamento) {
+	public FormaPagamento salvar(@RequestBody @Valid FormaPagamento formaPagamento) {
 		return formaPagamentoService.salvar(formaPagamento);
 	}
 	
 	@PutMapping("/{id}")
-	public FormaPagamento atualizar(@PathVariable Long id, @RequestBody FormaPagamento formaPagamento) {		
+	public FormaPagamento atualizar(@PathVariable Long id, @RequestBody @Valid FormaPagamento formaPagamento) {		
 		return formaPagamentoService.atualizar(id, formaPagamento);
 	} 
 	
