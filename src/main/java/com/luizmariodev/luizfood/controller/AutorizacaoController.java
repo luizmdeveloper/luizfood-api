@@ -2,6 +2,8 @@ package com.luizmariodev.luizfood.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,12 +43,12 @@ public class AutorizacaoController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Autorizacao salvar(@RequestBody Autorizacao autorizacao) {
+	public Autorizacao salvar(@RequestBody @Valid Autorizacao autorizacao) {
 		return autorizacaoService.salvar(autorizacao);
 	}
 	
 	@PutMapping("/{id}")
-	public Autorizacao atualizar(@PathVariable Long id, @RequestBody Autorizacao autorizacao) {
+	public Autorizacao atualizar(@PathVariable Long id, @RequestBody @Valid Autorizacao autorizacao) {
 		return autorizacaoService.atualizar(id, autorizacao);
 	}
 	
