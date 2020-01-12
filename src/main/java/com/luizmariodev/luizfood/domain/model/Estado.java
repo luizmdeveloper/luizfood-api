@@ -8,7 +8,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import com.luizmariodev.luizfood.GroupValidation;
+import com.luizmariodev.luizfood.core.validator.GroupValidation;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
