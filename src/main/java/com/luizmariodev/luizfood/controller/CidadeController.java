@@ -2,6 +2,8 @@ package com.luizmariodev.luizfood.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,12 +43,12 @@ public class CidadeController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cidade salvar(@RequestBody Cidade cidade) {
+	public Cidade salvar(@RequestBody @Valid Cidade cidade) {
 		return cidadeService.salvar(cidade);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Cidade cidade) {
+	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody @Valid Cidade cidade) {
 		Cidade cidadeSalva = cidadeService.atualizar(id, cidade);
 		return ResponseEntity.ok(cidadeSalva);		
 	}
