@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +33,10 @@ public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler 
 	
 	public static final String MENSAGEM_ERRO_GENERICO_USUARIO = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se o problema persistir," +
 															    " entre em contato com o administrador do sistema.";
+	
+	
+	@Autowired
+	private MessageSource messageSource;  
 
 	@Override
 	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,HttpStatus status, WebRequest request) {
@@ -73,10 +80,14 @@ public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler 
 		
 		BindingResult bindResult = ex.getBindingResult();
 		List<Problema.Propriedade> propriedades = bindResult.getFieldErrors().stream()
-													.map(FieldError -> Problema.Propriedade.builder()
+													.map(FieldError ->  {
+														String mensagemUauario = messageSource.getMessage(FieldError, LocaleContextHolder.getLocale());
+														
+														return Problema.Propriedade.builder()
 																.nome(FieldError.getField())
-																.mensagemUsuario(FieldError.getDefaultMessage())
-																.build())
+																.mensagemUsuario(mensagemUauario)
+																.build();
+													})
 													.collect(Collectors.toList());
 		
 		var problema = criarProblemaBuilder(TipoProblema.DADOS_INVALIDOS, status, detalhe)
