@@ -20,7 +20,6 @@ import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
@@ -29,6 +28,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.luizmariodev.luizfood.core.validator.GroupValidation;
+import com.luizmariodev.luizfood.core.validator.Multiplo;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -47,7 +47,7 @@ public class Restaurante {
 	@NotBlank
 	private String nome;
 	
-	@PositiveOrZero
+	@Multiplo(numero = 5)
 	@Column(name="taxa_entrega")
 	private BigDecimal taxaEntrega;
 	
