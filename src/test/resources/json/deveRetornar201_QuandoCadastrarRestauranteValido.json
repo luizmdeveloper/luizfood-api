@@ -1,0 +1,17 @@
+{
+	"nome": "Buger Gril",
+	"taxaEntrega": 8,
+	"cozinha": {
+    	"id": 3
+    },
+	"endereco": {
+		"cep": "5600000",
+	    "logradouro": "R. Cel. Soares",
+	    "complemento": " ",
+	    "numero": "1",
+	    "bairro": "Planalto",
+	    "cidade": {
+	        "id": 1
+	    }
+	}
+}

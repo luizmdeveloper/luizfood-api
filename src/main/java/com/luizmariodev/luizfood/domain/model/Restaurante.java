@@ -1,7 +1,7 @@
 package com.luizmariodev.luizfood.domain.model;
 
 import java.math.BigDecimal;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +28,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.luizmariodev.luizfood.core.validator.GroupValidation;
-import com.luizmariodev.luizfood.core.validator.Multiplo;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -47,7 +46,6 @@ public class Restaurante {
 	@NotBlank
 	private String nome;
 	
-	@Multiplo(numero = 5)
 	@Column(name="taxa_entrega")
 	private BigDecimal taxaEntrega;
 	
@@ -61,12 +59,12 @@ public class Restaurante {
 	@JsonIgnore
 	@CreationTimestamp
 	@Column(name="data_cadastro", nullable = true, columnDefinition = "datetime")
-	private LocalTime dataCadastro;
+	private LocalDateTime dataCadastro;
 	
 	@JsonIgnore
 	@UpdateTimestamp
 	@Column(name="data_ultima_atualizacao", nullable = true, columnDefinition = "datetime")
-	private LocalTime dataUltimaAtualizacao;
+	private LocalDateTime dataUltimaAtualizacao;
 	
 //	@JsonIgnore
 	@Embedded
