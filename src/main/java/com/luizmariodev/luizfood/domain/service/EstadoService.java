@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.luizmariodev.luizfood.domain.exception.EntidadeEmUsoException;
 import com.luizmariodev.luizfood.domain.exception.EstadoNaoEncontradoException;
@@ -19,23 +20,19 @@ public class EstadoService {
 	@Autowired
 	private EstadoRepository estadoRepository;
 	
+	@Transactional
 	public Estado salvar(Estado estado) {
 		return estadoRepository.save(estado);
 	}
 
+	@Transactional
 	public Estado atualizar(Long id, Estado estado) {
 		Estado estadoAtual = buscarEstadoPorCodigo(id);
 		BeanUtils.copyProperties(estado, estadoAtual, "id");
 		return estadoRepository.save(estadoAtual);
 	}
 	
-	public Estado buscarEstadoPorCodigo(Long id)  {
-		Estado estado = estadoRepository.findById(id)
-				.orElseThrow(() -> new EstadoNaoEncontradoException(id));
-			
-		return estado;
-	}
-	
+	@Transactional
 	public void excluir(Long estadoId) {
 		try {
 			estadoRepository.deleteById(estadoId);
@@ -44,5 +41,12 @@ public class EstadoService {
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(String.format(ESTADO_NAO_PODE_SER_EXCLUIDA, estadoId));
 		}
+	}
+	
+	public Estado buscarEstadoPorCodigo(Long id)  {
+		Estado estado = estadoRepository.findById(id)
+				.orElseThrow(() -> new EstadoNaoEncontradoException(id));
+			
+		return estado;
 	}
 }

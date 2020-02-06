@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.luizmariodev.luizfood.domain.exception.EntidadeEmUsoException;
 import com.luizmariodev.luizfood.domain.exception.FormaPagamentoNaoEncontradaException;
@@ -19,16 +20,19 @@ public class FormaPagamentoService {
 	@Autowired
 	private FormaPagamentoRepository formaPagamentoRepository;
 
+	@Transactional
 	public FormaPagamento salvar(FormaPagamento formaPagamento) {
 		return formaPagamentoRepository.save(formaPagamento);
 	}
 
+	@Transactional
 	public FormaPagamento atualizar(Long id, FormaPagamento formaPagamento) {
 		FormaPagamento formaPagamentoSalva = buscarPorId(id);
 		BeanUtils.copyProperties(formaPagamento, formaPagamentoSalva, "id");
 		return formaPagamentoRepository.save(formaPagamentoSalva);
 	}
 
+	@Transactional
 	public void excluir(Long id) {
 		try {
 			formaPagamentoRepository.deleteById(id);

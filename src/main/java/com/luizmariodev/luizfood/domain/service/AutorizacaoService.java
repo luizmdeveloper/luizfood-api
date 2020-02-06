@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.luizmariodev.luizfood.domain.exception.AutorizacaoNaoEncontradaException;
 import com.luizmariodev.luizfood.domain.exception.EntidadeEmUsoException;
@@ -19,16 +20,19 @@ public class AutorizacaoService {
 	@Autowired
 	private AutorizacaoRepository autorizacaoRepository;
 	
+	@Transactional
 	public Autorizacao salvar(Autorizacao autorizacao) {
 		return autorizacaoRepository.save(autorizacao);
 	}
 	
+	@Transactional
 	public Autorizacao atualizar(Long id, Autorizacao autorizacao) {
 		Autorizacao autorizacaoSalva = buscarAutorizacaoPorId(id);
 		BeanUtils.copyProperties(autorizacao, autorizacaoSalva, "id");
 		return autorizacaoRepository.save(autorizacaoSalva);
 	}
 
+	@Transactional
 	public void excluir(Long id) {
 		try {
 			autorizacaoRepository.deleteById(id);
