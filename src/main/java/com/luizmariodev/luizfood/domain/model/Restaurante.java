@@ -26,7 +26,6 @@ import javax.validation.groups.Default;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.luizmariodev.luizfood.core.validator.GroupValidation;
 
 import lombok.Data;
@@ -56,28 +55,23 @@ public class Restaurante {
 	@JoinColumn(name="codigo_cozinha", nullable = true)
 	private Cozinha cozinha;
 	
-	@JsonIgnore
 	@CreationTimestamp
 	@Column(name="data_cadastro", nullable = true, columnDefinition = "datetime")
 	private LocalDateTime dataCadastro;
 	
-	@JsonIgnore
 	@UpdateTimestamp
 	@Column(name="data_ultima_atualizacao", nullable = true, columnDefinition = "datetime")
 	private LocalDateTime dataUltimaAtualizacao;
 	
-//	@JsonIgnore
 	@Embedded
 	private Endereco endereco;
 	
-//	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "restaurantes_formas_pagamentos",
 			   joinColumns = @JoinColumn(name="codigo_restaurante"),
 			   inverseJoinColumns = @JoinColumn(name="codigo_forma_pagamento"))
 	private List<FormaPagamento> pagamentos = new ArrayList<FormaPagamento>();
 	
-	@JsonIgnore
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<Produto>();
 }

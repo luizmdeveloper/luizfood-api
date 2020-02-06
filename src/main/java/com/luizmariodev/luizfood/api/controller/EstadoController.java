@@ -1,4 +1,4 @@
-package com.luizmariodev.luizfood.controller;
+package com.luizmariodev.luizfood.api.controller;
 
 import java.util.List;
 
@@ -17,44 +17,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.luizmariodev.luizfood.domain.model.Cozinha;
-import com.luizmariodev.luizfood.domain.repository.CozinhaRepository;
-import com.luizmariodev.luizfood.domain.service.CozinhaService;
+import com.luizmariodev.luizfood.domain.model.Estado;
+import com.luizmariodev.luizfood.domain.repository.EstadoRepository;
+import com.luizmariodev.luizfood.domain.service.EstadoService;
 
 @RestController
-@RequestMapping("/cozinhas")
-public class CozinhaController {
+@RequestMapping("/estados")
+public class EstadoController {
+
+	@Autowired
+	private EstadoRepository estadoRepository;
 	
 	@Autowired
-	private CozinhaRepository cozinhaRepository;
-	
-	@Autowired
-	private CozinhaService cozinhaService;
+	private EstadoService estadoService;
 	
 	@GetMapping
-	public List<Cozinha> buscar(){
-		return cozinhaRepository.findAll();
+	public List<Estado> buscar() {
+		return estadoRepository.findAll();
 	}
 	
 	@GetMapping("/{id}")
-	public Cozinha buscarPorCodigo(@PathVariable Long id) {		
-		return cozinhaService.buscarCozinhaPorId(id);
+	public Estado buscarPorId(@PathVariable Long id) {
+		return estadoService.buscarEstadoPorCodigo(id);
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cozinha salvar(@RequestBody @Valid Cozinha cozinha) {
-		return cozinhaService.salvar(cozinha);
+	public Estado salvar(@RequestBody @Valid Estado estado) {
+		return estadoService.salvar(estado);
 	}
 	
 	@PutMapping("/{id}")
-	public Cozinha atualizar(@PathVariable Long id, @RequestBody @Valid Cozinha cozinha){
-		return cozinhaService.atualizar(id, cozinha);
+	public Estado atualizar(@PathVariable Long id, @RequestBody @Valid Estado estado) {
+		return estadoService.atualizar(id, estado);			
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> excluir(@PathVariable Long id) {
-		cozinhaService.excluir(id);
+		estadoService.excluir(id);
 		return ResponseEntity.noContent().build();
 	}
 }

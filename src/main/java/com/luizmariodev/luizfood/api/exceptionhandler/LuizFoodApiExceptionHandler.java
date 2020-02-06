@@ -1,4 +1,4 @@
-package com.luizmariodev.luizfood.exceptionhandler;
+package com.luizmariodev.luizfood.api.exceptionhandler;
 
 import java.time.LocalDateTime;
 import java.util.List;

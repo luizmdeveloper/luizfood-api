@@ -1,4 +1,4 @@
-package com.luizmariodev.luizfood.controller;
+package com.luizmariodev.luizfood.api.controller;
 
 import java.lang.reflect.Field;
 import java.util.List;
