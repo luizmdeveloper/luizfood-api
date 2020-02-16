@@ -27,6 +27,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.luizmariodev.luizfood.api.assembler.RestauranteInputDissembler;
+import com.luizmariodev.luizfood.api.assembler.RestauranteModelAssembler;
+import com.luizmariodev.luizfood.api.model.RestauranteModel;
+import com.luizmariodev.luizfood.api.model.input.RestauranteModelInput;
 import com.luizmariodev.luizfood.domain.model.Restaurante;
 import com.luizmariodev.luizfood.domain.repository.RestauranteRepository;
 import com.luizmariodev.luizfood.domain.service.RestauranteService;
@@ -41,32 +45,40 @@ public class RestauranteController {
 	@Autowired
 	private RestauranteService restauranteService;
 	
+	@Autowired
+	private RestauranteModelAssembler restauranteModelAssembler;
+	
+	@Autowired
+	private RestauranteInputDissembler restauranteInputDissembler;
+	
 	@GetMapping
-	public List<Restaurante> buscar(){
-		return restauranteRepository.findAll();
+	public List<RestauranteModel> buscar(){
+		return restauranteModelAssembler.toCollectionModel(restauranteRepository.findAll());
 	}
 	
 	@GetMapping("/{id}")
-	public Restaurante buscarPorId(@PathVariable Long id) {	
-		return restauranteService.buscarRestaurantePorCodigo(id);
+	public RestauranteModel buscarPorId(@PathVariable Long id) {	
+		return restauranteModelAssembler.toModel(restauranteService.buscarRestaurantePorCodigo(id));
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Restaurante salvar(@RequestBody @Valid Restaurante restaurante) {
-		return restauranteService.salvar(restaurante);
+	public RestauranteModel salvar(@RequestBody @Valid RestauranteModelInput restauranteInput) {
+		var restaurante = restauranteService.salvar(restauranteInputDissembler.toDomainObject(restauranteInput));
+		return restauranteModelAssembler.toModel(restaurante);
 	}
 	
 	@PutMapping("/{id}")
-	public Restaurante atualizar(@PathVariable Long id, @RequestBody @Valid Restaurante restaurante) {
-		return restauranteService.atualizar(id, restaurante); 			
+	public RestauranteModel atualizar(@PathVariable Long id, @RequestBody @Valid RestauranteModelInput restauranteInput) {
+		var restaurante = restauranteService.atualizar(id, restauranteInputDissembler.toDomainObject(restauranteInput)); 
+		return restauranteModelAssembler.toModel(restaurante); 			
 	}
 	
 	@PatchMapping("/{id}")
 	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Map<String, Object> dadosOrigem, HttpServletRequest httpServletRequest) {
 		Restaurante restauranteSalvo = restauranteService.buscarRestaurantePorCodigo(id);
 		merge(dadosOrigem, restauranteSalvo, httpServletRequest);
-		return ResponseEntity.ok(atualizar(id, restauranteSalvo));
+		return ResponseEntity.ok(restauranteService.atualizar(id, restauranteSalvo));
 	}
 	
 	@DeleteMapping("/{id}")

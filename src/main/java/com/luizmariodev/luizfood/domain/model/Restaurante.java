@@ -1,7 +1,7 @@
 package com.luizmariodev.luizfood.domain.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,11 +57,11 @@ public class Restaurante {
 	
 	@CreationTimestamp
 	@Column(name="data_cadastro", nullable = true, columnDefinition = "datetime")
-	private LocalDateTime dataCadastro;
+	private OffsetDateTime dataCadastro;
 	
 	@UpdateTimestamp
 	@Column(name="data_ultima_atualizacao", nullable = true, columnDefinition = "datetime")
-	private LocalDateTime dataUltimaAtualizacao;
+	private OffsetDateTime dataUltimaAtualizacao;
 	
 	@Embedded
 	private Endereco endereco;
