@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.luizmariodev.luizfood.api.model.input.CidadeModelInput;
 import com.luizmariodev.luizfood.domain.model.Cidade;
+import com.luizmariodev.luizfood.domain.model.Estado;
 
 @Component
 public class CidadeModelInputDissembler {
@@ -17,4 +18,10 @@ public class CidadeModelInputDissembler {
 		return modelMapper.map(cidadeInput, Cidade.class);
 	}
 	
+	public void copyToDomainObject(CidadeModelInput cidadeInput, Cidade cidade) {
+		// Para evitar org.hibernate.HibernateException: identifier of an instance of 
+		// com.algaworks.algafood.domain.model.Cidade was altered from 1 to 2
+		cidade.setEstado(new Estado());		
+		modelMapper.map(cidadeInput, cidade);
+	}	
 }

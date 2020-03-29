@@ -60,6 +60,7 @@ public class CidadeController {
 	@PutMapping("/{id}")
 	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody @Valid CidadeModelInput cidadeInput) {
 		Cidade cidadeSalva = cidadeService.atualizar(id, cidadeModelInputDissembler.toDomainObject(cidadeInput));
+		cidadeModelInputDissembler.copyToDomainObject(cidadeInput, cidadeSalva);
 		return ResponseEntity.ok(cidadeSalva);		
 	}
 	
