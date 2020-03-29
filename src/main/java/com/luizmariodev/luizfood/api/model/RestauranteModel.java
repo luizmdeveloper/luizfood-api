@@ -13,5 +13,6 @@ public class RestauranteModel {
 	private String nome;
 	private BigDecimal precoEntrega;
 	private CozinhaModel cozinha;
+	private Boolean ativo;
 
 }

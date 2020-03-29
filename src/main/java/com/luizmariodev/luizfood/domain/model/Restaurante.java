@@ -48,6 +48,8 @@ public class Restaurante {
 	@Column(name="taxa_entrega")
 	private BigDecimal taxaEntrega;
 	
+	private Boolean ativo;
+	
 	@Valid
 	@NotNull
 	@ConvertGroup(from = Default.class, to = GroupValidation.SalvarRestaurante.class)
@@ -74,4 +76,12 @@ public class Restaurante {
 	
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<Produto>();
+	
+	public void ativar() {
+		setAtivo(true);
+	}
+	
+	public void inativar() {
+		setAtivo(false);
+	}	
 }

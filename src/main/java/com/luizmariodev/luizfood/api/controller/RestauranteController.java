@@ -86,6 +86,16 @@ public class RestauranteController {
 		restauranteService.excluir(id);
 		return ResponseEntity.noContent().build();
 	}
+	
+	@PutMapping("/{restauranteId}/ativo")
+	public void ativar(@PathVariable Long restauranteId) {
+		restauranteService.ativar(restauranteId);
+	}
+	
+	@DeleteMapping("/{restauranteId}/inativo")
+	public void inativar(@PathVariable Long restauranteId) {
+		restauranteService.inativar(restauranteId);
+	}
 
 	private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino, HttpServletRequest request) {
 		ObjectMapper objectMapper = new ObjectMapper();

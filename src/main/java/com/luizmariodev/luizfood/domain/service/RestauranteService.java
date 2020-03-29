@@ -43,6 +43,18 @@ public class RestauranteService {
 	}
 	
 	@Transactional
+	public void ativar(Long restauranteId) {
+		var restaurante = buscarRestaurantePorCodigo(restauranteId);
+		restaurante.ativar();
+	}
+	
+	@Transactional
+	public void inativar(Long restauranteId) {
+		var restaurante = buscarRestaurantePorCodigo(restauranteId);
+		restaurante.inativar();
+	}	
+	
+	@Transactional
 	public void excluir(Long id) {
 		try {
 			restauranteRepository.deleteById(id);			
