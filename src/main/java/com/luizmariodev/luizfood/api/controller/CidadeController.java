@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.luizmariodev.luizfood.api.assembler.CidadeModelAssembler;
+import com.luizmariodev.luizfood.api.assembler.CidadeModelInputDissembler;
+import com.luizmariodev.luizfood.api.model.CidadeModel;
+import com.luizmariodev.luizfood.api.model.input.CidadeModelInput;
 import com.luizmariodev.luizfood.domain.model.Cidade;
 import com.luizmariodev.luizfood.domain.repository.CidadeRepository;
 import com.luizmariodev.luizfood.domain.service.CidadeService;
@@ -31,25 +35,31 @@ public class CidadeController {
 	@Autowired
 	private CidadeService cidadeService;
 	
+	@Autowired
+	private CidadeModelAssembler cidadeModelAssembler;
+	
+	@Autowired
+	private CidadeModelInputDissembler cidadeModelInputDissembler;
+	
 	@GetMapping
-	public List<Cidade> buscarTodos() {
-		return cidadeRepository.findAll();
+	public List<CidadeModel> buscarTodos() {
+		return cidadeModelAssembler.toCollectionModel(cidadeRepository.findAll());
 	}
 	
 	@GetMapping("/{id}")
-	public Cidade buscarPorCodigo(@PathVariable Long id) {
-		return cidadeService.buscarCidadePorCodigo(id);
+	public CidadeModel buscarPorCodigo(@PathVariable Long id) {
+		return cidadeModelAssembler.toModel(cidadeService.buscarCidadePorCodigo(id));
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cidade salvar(@RequestBody @Valid Cidade cidade) {
-		return cidadeService.salvar(cidade);
+	public Cidade salvar(@RequestBody @Valid CidadeModelInput cidadeInput) {
+		return cidadeService.salvar(cidadeModelInputDissembler.toDomainObject(cidadeInput));
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody @Valid Cidade cidade) {
-		Cidade cidadeSalva = cidadeService.atualizar(id, cidade);
+	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody @Valid CidadeModelInput cidadeInput) {
+		Cidade cidadeSalva = cidadeService.atualizar(id, cidadeModelInputDissembler.toDomainObject(cidadeInput));
 		return ResponseEntity.ok(cidadeSalva);		
 	}
 	
