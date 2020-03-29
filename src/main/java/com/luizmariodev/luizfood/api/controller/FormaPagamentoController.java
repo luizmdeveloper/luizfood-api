@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.luizmariodev.luizfood.api.assembler.FormaPagamentoInputDissembler;
+import com.luizmariodev.luizfood.api.assembler.FormaPagamentoModelAssembler;
+import com.luizmariodev.luizfood.api.model.FormaPagamentoModel;
+import com.luizmariodev.luizfood.api.model.input.FormaPagamentoModelInput;
 import com.luizmariodev.luizfood.domain.model.FormaPagamento;
 import com.luizmariodev.luizfood.domain.repository.FormaPagamentoRepository;
 import com.luizmariodev.luizfood.domain.service.FormaPagamentoService;
@@ -31,25 +35,31 @@ public class FormaPagamentoController {
 	@Autowired
 	private FormaPagamentoService formaPagamentoService;
 	
+	@Autowired
+	private FormaPagamentoModelAssembler formaPagamentoModelAssembler;
+	
+	@Autowired
+	private FormaPagamentoInputDissembler formaPagamentoInputDissembler;
+	
 	@GetMapping
-	public List<FormaPagamento> buscarTodos() {
-		return formaPagamentoRepository.findAll();
+	public List<FormaPagamentoModel> buscarTodos() {
+		return formaPagamentoModelAssembler.toCollectionModel(formaPagamentoRepository.findAll());
 	}
 	
 	@GetMapping("/{id}")
-	public FormaPagamento buscarPorId(@PathVariable Long id) {
-		return formaPagamentoService.buscarPorId(id);
+	public FormaPagamentoModel buscarPorId(@PathVariable Long id) {
+		return formaPagamentoModelAssembler.toModel(formaPagamentoService.buscarPorId(id));
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public FormaPagamento salvar(@RequestBody @Valid FormaPagamento formaPagamento) {
-		return formaPagamentoService.salvar(formaPagamento);
+	public FormaPagamento salvar(@RequestBody @Valid FormaPagamentoModelInput formaPagamentoInput) {
+		return formaPagamentoService.salvar(formaPagamentoInputDissembler.toDomainObject(formaPagamentoInput));
 	}
 	
 	@PutMapping("/{id}")
-	public FormaPagamento atualizar(@PathVariable Long id, @RequestBody @Valid FormaPagamento formaPagamento) {		
-		return formaPagamentoService.atualizar(id, formaPagamento);
+	public FormaPagamento atualizar(@PathVariable Long id, @RequestBody @Valid FormaPagamentoModelInput formaPagamentoInput) {		
+		return formaPagamentoService.atualizar(id, formaPagamentoInputDissembler.toDomainObject(formaPagamentoInput));
 	} 
 	
 	@DeleteMapping("/{id}")
