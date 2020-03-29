@@ -71,7 +71,7 @@ public class RestauranteController {
 	@PutMapping("/{id}")
 	public RestauranteModel atualizar(@PathVariable Long id, @RequestBody @Valid RestauranteModelInput restauranteInput) {
 		var restaurante = restauranteService.atualizar(id, restauranteInputDissembler.toDomainObject(restauranteInput)); 		
-		restauranteInputDissembler.copyToDomainObject(restauranteInput, restaurante);			
+		restauranteInputDissembler.copyToDomainObject(restauranteInput, restaurante);
 		return restauranteModelAssembler.toModel(restaurante); 			
 	}
 	
