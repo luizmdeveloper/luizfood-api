@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.luizmariodev.luizfood.api.assembler.EstadoInputDissembler;
+import com.luizmariodev.luizfood.api.assembler.EstadoModelAssembler;
+import com.luizmariodev.luizfood.api.model.EstadoModel;
+import com.luizmariodev.luizfood.api.model.input.EstadoModelInput;
 import com.luizmariodev.luizfood.domain.model.Estado;
 import com.luizmariodev.luizfood.domain.repository.EstadoRepository;
 import com.luizmariodev.luizfood.domain.service.EstadoService;
@@ -31,25 +35,31 @@ public class EstadoController {
 	@Autowired
 	private EstadoService estadoService;
 	
+	@Autowired
+	private EstadoModelAssembler estadoModelAssembler;
+	
+	@Autowired
+	private EstadoInputDissembler estadoInputDissembler;
+	
 	@GetMapping
-	public List<Estado> buscar() {
-		return estadoRepository.findAll();
+	public List<EstadoModel> buscar() {
+		return estadoModelAssembler.toCollectionModel(estadoRepository.findAll());
 	}
 	
 	@GetMapping("/{id}")
-	public Estado buscarPorId(@PathVariable Long id) {
-		return estadoService.buscarEstadoPorCodigo(id);
+	public EstadoModel buscarPorId(@PathVariable Long id) {
+		return estadoModelAssembler.toModel(estadoService.buscarEstadoPorCodigo(id));
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Estado salvar(@RequestBody @Valid Estado estado) {
-		return estadoService.salvar(estado);
+	public Estado salvar(@RequestBody @Valid EstadoModelInput estadoInput) {
+		return estadoService.salvar(estadoInputDissembler.toDomainObject(estadoInput));
 	}
 	
 	@PutMapping("/{id}")
-	public Estado atualizar(@PathVariable Long id, @RequestBody @Valid Estado estado) {
-		return estadoService.atualizar(id, estado);			
+	public Estado atualizar(@PathVariable Long id, @RequestBody @Valid EstadoModelInput estadoInput) {
+		return estadoService.atualizar(id, estadoInputDissembler.toDomainObject(estadoInput));			
 	}
 	
 	@DeleteMapping("/{id}")
