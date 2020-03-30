@@ -36,6 +36,7 @@ public class FormaPagamentoService {
 	public void excluir(Long id) {
 		try {
 			formaPagamentoRepository.deleteById(id);
+			formaPagamentoRepository.flush();
 		} catch (EmptyResultDataAccessException e) {
 			throw new FormaPagamentoNaoEncontradaException(id);
 		} catch (DataIntegrityViolationException e) {

@@ -57,7 +57,8 @@ public class RestauranteService {
 	@Transactional
 	public void excluir(Long id) {
 		try {
-			restauranteRepository.deleteById(id);			
+			restauranteRepository.deleteById(id);
+			restauranteRepository.flush();
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(String.format(RESTURANTE_NAO_PODE_EXCLUIDO, id));
 		} catch (EmptyResultDataAccessException e) {

@@ -36,6 +36,7 @@ public class AutorizacaoService {
 	public void excluir(Long id) {
 		try {
 			autorizacaoRepository.deleteById(id);
+			autorizacaoRepository.flush();
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(String.format(AUTORIZACAO_NAO_PODE_EXCLUIDO, id));
 		} catch (EmptyResultDataAccessException e ) {
