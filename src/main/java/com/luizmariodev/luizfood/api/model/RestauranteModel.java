@@ -11,7 +11,7 @@ public class RestauranteModel {
 	
 	private Long id;
 	private String nome;
-	private BigDecimal precoEntrega;
+	private BigDecimal taxaEntrega;
 	private CozinhaModel cozinha;
 	private Boolean ativo;
 	private EnderecoModel endereco;

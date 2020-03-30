@@ -7,8 +7,12 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.luizmariodev.luizfood.domain.exception.CidadeNaoEncontradaException;
+import com.luizmariodev.luizfood.domain.exception.CozinhaNaoEncontradaException;
 import com.luizmariodev.luizfood.domain.exception.EntidadeEmUsoException;
+import com.luizmariodev.luizfood.domain.exception.NegocioException;
 import com.luizmariodev.luizfood.domain.exception.RestauranteNaoEncontradoException;
+import com.luizmariodev.luizfood.domain.model.Cidade;
 import com.luizmariodev.luizfood.domain.model.Cozinha;
 import com.luizmariodev.luizfood.domain.model.Restaurante;
 import com.luizmariodev.luizfood.domain.repository.RestauranteRepository;
@@ -24,10 +28,24 @@ public class RestauranteService {
 	@Autowired
 	private CozinhaService cozinhaService;
 	
+	@Autowired
+	private CidadeService cidadeSerivce;
+	
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
 		Long cozinhaId = restaurante.getCozinha().getId();
-		buscarCozinhaPorCodigo(cozinhaId);
+		Long cidadeId = restaurante.getEndereco().getCidade().getId();
+		
+		try {
+			var cozinhaSalva = buscarCozinhaPorCodigo(cozinhaId);
+			var cidadeSalva = buscarCidadePorCodigo(cidadeId);
+			
+			restaurante.setCozinha(cozinhaSalva);
+			restaurante.getEndereco().setCidade(cidadeSalva);
+			
+		} catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
 		
 		return restauranteRepository.save(restaurante);
 	}
@@ -36,9 +54,19 @@ public class RestauranteService {
 	public Restaurante atualizar(Long restauranteId, Restaurante restaurante) {		
 		Restaurante restauranteSalvo = buscarRestaurantePorCodigo(restauranteId);
 		Long cozinhaId = restaurante.getCozinha().getId();
-		Cozinha cozinhaSalva = buscarCozinhaPorCodigo(cozinhaId);
-		restaurante.setCozinha(cozinhaSalva);
-		BeanUtils.copyProperties(restaurante, restauranteSalvo, "id", "pagamentos", "endereco", "dataCadastro", "dataUltimaAtualizacao");
+		Long cidadeId = restaurante.getEndereco().getCidade().getId();
+		try {
+			var cozinhaSalva = buscarCozinhaPorCodigo(cozinhaId);
+			var cidadeSalva = buscarCidadePorCodigo(cidadeId);
+			
+			restaurante.setCozinha(cozinhaSalva);
+			restaurante.getEndereco().setCidade(cidadeSalva);
+			BeanUtils.copyProperties(restaurante, restauranteSalvo, "id", "pagamentos","dataCadastro", "dataUltimaAtualizacao");
+			
+		} catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
+		
 		return restauranteRepository.save(restauranteSalvo);
 	}
 	
@@ -75,4 +103,9 @@ public class RestauranteService {
 	private Cozinha buscarCozinhaPorCodigo(Long cozinhaId) {				
 		return cozinhaService.buscarCozinhaPorId(cozinhaId);
 	}
+	
+	private Cidade buscarCidadePorCodigo(Long cidadeId) {
+		return cidadeSerivce.buscarCidadePorCodigo(cidadeId);
+	}
+	
 }

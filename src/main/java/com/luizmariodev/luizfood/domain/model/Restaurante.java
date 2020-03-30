@@ -48,7 +48,7 @@ public class Restaurante {
 	@Column(name="taxa_entrega")
 	private BigDecimal taxaEntrega;
 	
-	private Boolean ativo;
+	private Boolean ativo = Boolean.TRUE;
 	
 	@Valid
 	@NotNull

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.luizmariodev.luizfood.api.model.input.RestauranteModelInput;
+import com.luizmariodev.luizfood.domain.model.Cidade;
 import com.luizmariodev.luizfood.domain.model.Cozinha;
 import com.luizmariodev.luizfood.domain.model.Restaurante;
 
@@ -21,7 +22,14 @@ public class RestauranteInputDissembler {
 	public void copyToDomainObject(RestauranteModelInput restauranteInput, Restaurante restaurante) {
 		// Para evitar org.hibernate.HibernateException: identifier of an instance of 
 		// com.luizmariodev.luizfood.domain.model.Cozinha was altered from 1 to 2
-		restaurante.setCozinha(new Cozinha());		
+		restaurante.setCozinha(new Cozinha());	
+
+		// Para evitar org.hibernate.HibernateException: identifier of an instance of 
+		// com.luizmariodev.luizfood.domain.model.Endereco was altered from 1 to 2		
+		if (restaurante.getEndereco().getCidade() != null) {
+			restaurante.getEndereco().setCidade(new Cidade());			
+		}
+		
 		modelMapper.map(restauranteInput, restaurante);
 	}
 

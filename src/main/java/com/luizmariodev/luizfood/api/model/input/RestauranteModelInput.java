@@ -19,10 +19,14 @@ public class RestauranteModelInput {
 	
 	@NotNull
 	@PositiveOrZero
-	private BigDecimal taxaFrete;
+	private BigDecimal taxaEntrega;
 	
 	@Valid
 	@NotNull
 	private CozinhaIdModelInput cozinha;
+	
+	@Valid
+	@NotNull
+	private EnderecoModelInput endereco;
 
 }
