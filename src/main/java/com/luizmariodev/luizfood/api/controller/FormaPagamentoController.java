@@ -53,8 +53,9 @@ public class FormaPagamentoController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public FormaPagamento salvar(@RequestBody @Valid FormaPagamentoModelInput formaPagamentoInput) {
-		return formaPagamentoService.salvar(formaPagamentoInputDissembler.toDomainObject(formaPagamentoInput));
+	public FormaPagamentoModel salvar(@RequestBody @Valid FormaPagamentoModelInput formaPagamentoInput) {
+		var formaPagamento = formaPagamentoService.salvar(formaPagamentoInputDissembler.toDomainObject(formaPagamentoInput)); 
+		return formaPagamentoModelAssembler.toModel(formaPagamento);
 	}
 	
 	@PutMapping("/{id}")

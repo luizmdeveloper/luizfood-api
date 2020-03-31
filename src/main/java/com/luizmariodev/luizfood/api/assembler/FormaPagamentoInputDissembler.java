@@ -15,6 +15,5 @@ public class FormaPagamentoInputDissembler {
 	
 	public FormaPagamento toDomainObject(FormaPagamentoModelInput formaPagamentoInput) {
 		return modelMapper.map(formaPagamentoInput, FormaPagamento.class);
-	}
-	
+	}	
 }
