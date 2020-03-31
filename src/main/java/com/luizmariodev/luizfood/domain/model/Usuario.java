@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -29,8 +31,14 @@ public class Usuario {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotBlank
 	private String nome;
+	
+	@NotBlank
+	@Email
 	private String email;
+	
+	@NotBlank
 	private String senha;
 	
 	@CreationTimestamp
@@ -42,4 +50,12 @@ public class Usuario {
 			   joinColumns = @JoinColumn(name="codigo_usuario"),
 			   inverseJoinColumns = @JoinColumn(name="codigo_grupo"))
 	private List<Grupo> grupos = new ArrayList<Grupo>();
+
+	public boolean isSenhaAtualConcide(String senhaAtual) {
+		return this.senha.equals(senhaAtual);		
+	}
+	
+	public boolean isSenhaAtualDiferenteSenha(String senhaAtual) {
+		return !isSenhaAtualConcide(senhaAtual);
+	}
 }
