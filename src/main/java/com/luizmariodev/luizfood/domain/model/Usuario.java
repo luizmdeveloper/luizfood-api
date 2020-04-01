@@ -1,9 +1,10 @@
 package com.luizmariodev.luizfood.domain.model;
 
-import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -42,8 +43,8 @@ public class Usuario {
 	private String senha;
 	
 	@CreationTimestamp
-	@JoinColumn(name="data_cadastro")
-	private LocalTime dataCadastro;
+	@Column(name="data_cadastro")
+	private OffsetDateTime dataCadastro;
 	
 	@ManyToMany
 	@JoinTable(name="usuarios_grupos",

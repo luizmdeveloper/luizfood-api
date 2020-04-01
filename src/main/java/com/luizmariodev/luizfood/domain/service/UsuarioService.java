@@ -24,8 +24,8 @@ public class UsuarioService {
 	@Transactional
 	public Usuario atualizar(Long usuarioId, Usuario usuario) {
 		var usuarioSalvo = buscarPorCodigo(usuarioId);		
-		BeanUtils.copyProperties(usuario, usuarioSalvo, "id");		
-		return usuarioRepository.save(usuario);
+		BeanUtils.copyProperties(usuario, usuarioSalvo, "id", "dataCadastro", "senha");		
+		return usuarioRepository.save(usuarioSalvo);
 	}
 	
 	@Transactional
