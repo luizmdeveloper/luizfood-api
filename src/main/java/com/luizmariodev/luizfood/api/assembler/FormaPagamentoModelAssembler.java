@@ -1,5 +1,6 @@
 package com.luizmariodev.luizfood.api.assembler;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,7 @@ public class FormaPagamentoModelAssembler {
 		return modelMapper.map(formaPagamento, FormaPagamentoModel.class);
 	}
 	
-	public List<FormaPagamentoModel> toCollectionModel(List<FormaPagamento> pagamentos) {
+	public List<FormaPagamentoModel> toCollectionModel(Collection<FormaPagamento> pagamentos) {
 		return pagamentos.stream()
 				.map(pagamento -> toModel(pagamento))
 				.collect(Collectors.toList());

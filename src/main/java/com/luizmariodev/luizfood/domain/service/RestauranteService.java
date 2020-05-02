@@ -14,6 +14,7 @@ import com.luizmariodev.luizfood.domain.exception.NegocioException;
 import com.luizmariodev.luizfood.domain.exception.RestauranteNaoEncontradoException;
 import com.luizmariodev.luizfood.domain.model.Cidade;
 import com.luizmariodev.luizfood.domain.model.Cozinha;
+import com.luizmariodev.luizfood.domain.model.FormaPagamento;
 import com.luizmariodev.luizfood.domain.model.Restaurante;
 import com.luizmariodev.luizfood.domain.repository.RestauranteRepository;
 
@@ -30,6 +31,9 @@ public class RestauranteService {
 	
 	@Autowired
 	private CidadeService cidadeSerivce;
+	
+	@Autowired
+	private FormaPagamentoService formaPagamentoService;
 	
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
@@ -100,6 +104,24 @@ public class RestauranteService {
 		return restaurante;
 	}
 	
+	@Transactional
+	public void asscociarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
+		Restaurante restaurante = buscarRestaurantePorCodigo(restauranteId);		
+		FormaPagamento formaPagamento = buscarFormaPagamentoPorCodigo(formaPagamentoId);
+		restaurante.adicionarFormaPagamento(formaPagamento);
+	}
+
+	@Transactional
+	public void desasscociarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
+		Restaurante restaurante = buscarRestaurantePorCodigo(restauranteId);		
+		FormaPagamento formaPagamento = buscarFormaPagamentoPorCodigo(formaPagamentoId);
+		restaurante.removerFormaPagamento(formaPagamento);
+	}
+	
+	private FormaPagamento buscarFormaPagamentoPorCodigo(Long formaPagamentoId) {
+		return formaPagamentoService.buscarPorId(formaPagamentoId);
+	}
+
 	private Cozinha buscarCozinhaPorCodigo(Long cozinhaId) {				
 		return cozinhaService.buscarCozinhaPorId(cozinhaId);
 	}
@@ -107,5 +129,6 @@ public class RestauranteService {
 	private Cidade buscarCidadePorCodigo(Long cidadeId) {
 		return cidadeSerivce.buscarCidadePorCodigo(cidadeId);
 	}
+
 	
 }

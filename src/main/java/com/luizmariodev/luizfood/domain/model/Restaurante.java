@@ -3,7 +3,9 @@ package com.luizmariodev.luizfood.domain.model;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -72,7 +74,7 @@ public class Restaurante {
 	@JoinTable(name = "restaurantes_formas_pagamentos",
 			   joinColumns = @JoinColumn(name="codigo_restaurante"),
 			   inverseJoinColumns = @JoinColumn(name="codigo_forma_pagamento"))
-	private List<FormaPagamento> pagamentos = new ArrayList<FormaPagamento>();
+	private Set<FormaPagamento> pagamentos = new HashSet<FormaPagamento>();
 	
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<Produto>();
@@ -83,5 +85,14 @@ public class Restaurante {
 	
 	public void inativar() {
 		setAtivo(false);
+	}
+
+	public boolean adicionarFormaPagamento(FormaPagamento formaPagamento) {		
+		return getPagamentos().add(formaPagamento);		
+	}
+	
+	public boolean removerFormaPagamento(FormaPagamento formaPagamento) {		
+		return getPagamentos().remove(formaPagamento);		
 	}	
+	
 }
