@@ -1,7 +1,7 @@
 package com.luizmariodev.luizfood.domain.model;
 
 import java.math.BigDecimal;
-import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,16 +45,16 @@ public class Pedido {
 	private FormaPagamento pagamento;
 	
 	@Column(name="data_criacao")
-	private LocalTime dataCricacao;
+	private OffsetDateTime dataCricacao;
 	
 	@Column(name="data_confirmacao")
-	private LocalTime dataConfirmacao;
+	private OffsetDateTime dataConfirmacao;
 	
 	@Column(name="data_cancelamento")
-	private LocalTime dataCancelamento;
+	private OffsetDateTime dataCancelamento;
 	
 	@Column(name="data_entrega")
-	private LocalTime dataEntrega;
+	private OffsetDateTime dataEntrega;
 	
 	@Embedded
 	private Endereco enderecoEntrega;
@@ -65,11 +65,11 @@ public class Pedido {
 	@Column(name="valor_subtotal")
 	private BigDecimal subTotal;
 	
-	@Column(name="taxa_entrega")
-	private BigDecimal taxaEntrega;
+	@Column(name="taxa_frete")
+	private BigDecimal taxaFrete;
 	
 	@Enumerated(EnumType.STRING)
-	private Status status;
+	private Status status = Status.CRIADO;
 	
 	@OneToMany(mappedBy = "pedido")
 	private List<ItemPedido> itens = new ArrayList<ItemPedido>();
