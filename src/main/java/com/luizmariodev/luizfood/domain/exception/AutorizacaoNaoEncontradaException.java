@@ -11,5 +11,4 @@ public class AutorizacaoNaoEncontradaException extends EntidadeNaoEncontradaExce
 	public AutorizacaoNaoEncontradaException(Long autorizacaoId) {
 		this(String.format("Autorização de código %d, não pode ser excluída", autorizacaoId));
 	}
-
 }

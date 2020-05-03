@@ -25,5 +25,5 @@ public class Autorizacao {
 	
 	@NotBlank
 	private String descricao;
-
+	
 }
