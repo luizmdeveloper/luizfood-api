@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.luizmariodev.luizfood.domain.exception.AutorizacaoNaoEncontradaException;
 import com.luizmariodev.luizfood.domain.exception.EntidadeEmUsoException;
 import com.luizmariodev.luizfood.domain.model.Autorizacao;
+import com.luizmariodev.luizfood.domain.model.Grupo;
 import com.luizmariodev.luizfood.domain.repository.AutorizacaoRepository;
 
 @Service
@@ -20,11 +21,14 @@ public class AutorizacaoService {
 	@Autowired
 	private AutorizacaoRepository autorizacaoRepository;
 	
+	@Autowired
+	private GrupoService grupoService;
+	
 	@Transactional
 	public Autorizacao salvar(Autorizacao autorizacao) {
 		return autorizacaoRepository.save(autorizacao);
 	}
-	
+		
 	@Transactional
 	public Autorizacao atualizar(Long id, Autorizacao autorizacao) {
 		Autorizacao autorizacaoSalva = buscarAutorizacaoPorId(id);
@@ -43,6 +47,10 @@ public class AutorizacaoService {
 			throw new AutorizacaoNaoEncontradaException(id);
 		}
 	}
+	
+	public Grupo buscarGrupoPorCodigo(Long grupoId) {
+		return grupoService.buscarPorId(grupoId);
+	}
 
 	public Autorizacao buscarAutorizacaoPorId(Long id) {
 		Autorizacao autorizacao = autorizacaoRepository.findById(id)
@@ -50,4 +58,5 @@ public class AutorizacaoService {
 		
 		return autorizacao;
 	}
+
 }

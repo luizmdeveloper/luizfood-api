@@ -44,5 +44,4 @@ public class Grupo {
 	public boolean remover(Autorizacao autorizacao) {
 		return getAutorizacoes().remove(autorizacao);
 	}
-
 }
