@@ -34,7 +34,7 @@ public class Pedido {
 	
 	@ManyToOne
 	@JoinColumn(name="codigo_restaurante")
-	private Restaurante Restaurante;
+	private Restaurante restaurante;
 	
 	@ManyToOne
 	@JoinColumn(name="codigo_usuario")

@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.luizmariodev.luizfood.api.assembler.PedidoModelAssembler;
+import com.luizmariodev.luizfood.api.assembler.PedidoResumoModelAssembler;
 import com.luizmariodev.luizfood.api.model.PedidoModel;
-import com.luizmariodev.luizfood.api.model.PedidoModelAssembler;
+import com.luizmariodev.luizfood.api.model.PedidoResumoModel;
 import com.luizmariodev.luizfood.domain.repository.PedidoRepository;
 import com.luizmariodev.luizfood.domain.service.PedidoService;
 
@@ -26,10 +28,13 @@ public class PedidoController {
 	@Autowired
 	private PedidoModelAssembler pedidoModelAssembler;
 	
+	@Autowired
+	private PedidoResumoModelAssembler pedidoResumoModelAssembler;
+	
 	@GetMapping
-	public List<PedidoModel> buscarTodos() {
-		var pedidos = pedidoRepository.findAll();
-		return pedidoModelAssembler.toCollectionModel(pedidos);
+	public List<PedidoResumoModel> buscarTodos() {
+		var pedidos = pedidoRepository.findAllResumo();
+		return pedidoResumoModelAssembler.toCollectionModel(pedidos);
 	}
 	
 	@GetMapping("/{pedidoId}")
