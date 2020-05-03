@@ -1,7 +1,7 @@
 package com.luizmariodev.luizfood.domain.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,6 +23,7 @@ import lombok.EqualsAndHashCode;
 @Table(name="grupos")
 public class Grupo {
 	
+	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -34,6 +35,14 @@ public class Grupo {
 	@JoinTable(name="grupos_autorizacoes",
 			   joinColumns = @JoinColumn(name="codigo_grupo"),
 			   inverseJoinColumns = @JoinColumn(name="codigo_autorizacao"))
-	private List<Permissao> permissoes = new ArrayList<Permissao>();
+	private Set<Autorizacao> autorizacoes = new HashSet<Autorizacao>();
+	
+	public boolean adicionar(Autorizacao autorizacao) {
+		return getAutorizacoes().add(autorizacao);
+	}
+	
+	public boolean remover(Autorizacao autorizacao) {
+		return getAutorizacoes().remove(autorizacao);
+	}
 
 }

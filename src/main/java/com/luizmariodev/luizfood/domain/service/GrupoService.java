@@ -7,9 +7,12 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.luizmariodev.luizfood.domain.exception.AutorizacaoNaoEncontradaException;
 import com.luizmariodev.luizfood.domain.exception.EntidadeEmUsoException;
 import com.luizmariodev.luizfood.domain.exception.GrupoNaoEncontradoException;
+import com.luizmariodev.luizfood.domain.model.Autorizacao;
 import com.luizmariodev.luizfood.domain.model.Grupo;
+import com.luizmariodev.luizfood.domain.repository.AutorizacaoRepository;
 import com.luizmariodev.luizfood.domain.repository.GrupoRepository;
 
 @Service
@@ -20,6 +23,9 @@ public class GrupoService {
 	@Autowired
 	private GrupoRepository grupoRepository;
 
+	@Autowired
+	private AutorizacaoRepository autorizacaoRepository;
+	
 	@Transactional
 	public Grupo salvar(Grupo grupo) {
 		return grupoRepository.save(grupo);
@@ -48,5 +54,26 @@ public class GrupoService {
 		Grupo grupo = grupoRepository.findById(grupoId)
 					.orElseThrow(() -> new GrupoNaoEncontradoException(grupoId));				
 		return grupo;
+	}
+
+	@Transactional
+	public void associar(Long grupoId, Long autorizacaoId) {
+		var grupo = buscarPorId(grupoId);
+		var autorizacao = buscarAutorizacaoPorId(autorizacaoId);
+		grupo.adicionar(autorizacao);		
+	}
+	
+	@Transactional
+	public void desassociar(Long grupoId, Long autorizacaoId) {
+		var grupo = buscarPorId(grupoId);
+		var autorizacao = buscarAutorizacaoPorId(autorizacaoId);
+		grupo.remover(autorizacao);		
+	}
+	
+	public Autorizacao buscarAutorizacaoPorId(Long autorizacaoId) {
+		Autorizacao autorizacao = autorizacaoRepository.findById(autorizacaoId)
+				.orElseThrow(() -> new AutorizacaoNaoEncontradaException(autorizacaoId));
+		
+		return autorizacao;
 	}
 }

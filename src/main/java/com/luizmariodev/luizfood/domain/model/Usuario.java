@@ -1,8 +1,8 @@
 package com.luizmariodev.luizfood.domain.model;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -48,9 +48,9 @@ public class Usuario {
 	
 	@ManyToMany
 	@JoinTable(name="usuarios_grupos",
-			   joinColumns = @JoinColumn(name="codigo_usuario"),
-			   inverseJoinColumns = @JoinColumn(name="codigo_grupo"))
-	private List<Grupo> grupos = new ArrayList<Grupo>();
+			   joinColumns = @JoinColumn(name="codigo_grupo"),
+			   inverseJoinColumns = @JoinColumn(name="codigo_usuario"))
+	private Set<Grupo> grupos = new HashSet<Grupo>();
 
 	public boolean isSenhaAtualConcide(String senhaAtual) {
 		return this.senha.equals(senhaAtual);		
@@ -59,4 +59,12 @@ public class Usuario {
 	public boolean isSenhaAtualDiferenteSenha(String senhaAtual) {
 		return !isSenhaAtualConcide(senhaAtual);
 	}
+	
+	public boolean adicionar(Grupo grupo) {
+		return getGrupos().add(grupo);
+	}
+	
+	public boolean remover(Grupo grupo) {
+		return getGrupos().remove(grupo);
+	}	
 }

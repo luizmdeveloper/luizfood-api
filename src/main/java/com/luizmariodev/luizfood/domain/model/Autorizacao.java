@@ -16,6 +16,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class Autorizacao {
 	
+	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy =GenerationType.IDENTITY )
 	private Long id;
