@@ -15,6 +15,7 @@ import com.luizmariodev.luizfood.domain.exception.RestauranteNaoEncontradoExcept
 import com.luizmariodev.luizfood.domain.model.Cidade;
 import com.luizmariodev.luizfood.domain.model.Cozinha;
 import com.luizmariodev.luizfood.domain.model.FormaPagamento;
+import com.luizmariodev.luizfood.domain.model.Produto;
 import com.luizmariodev.luizfood.domain.model.Restaurante;
 import com.luizmariodev.luizfood.domain.repository.RestauranteRepository;
 
@@ -98,25 +99,32 @@ public class RestauranteService {
 		}
 	}
 	
-	public Restaurante buscarRestaurantePorCodigo(Long restauranteId) {
-		Restaurante restaurante = restauranteRepository.findById(restauranteId)
-					.orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));		
-		return restaurante;
-	}
-	
 	@Transactional
 	public void asscociarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
 		Restaurante restaurante = buscarRestaurantePorCodigo(restauranteId);		
 		FormaPagamento formaPagamento = buscarFormaPagamentoPorCodigo(formaPagamentoId);
 		restaurante.adicionarFormaPagamento(formaPagamento);
 	}
-
+	
 	@Transactional
 	public void desasscociarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
 		Restaurante restaurante = buscarRestaurantePorCodigo(restauranteId);		
 		FormaPagamento formaPagamento = buscarFormaPagamentoPorCodigo(formaPagamentoId);
 		restaurante.removerFormaPagamento(formaPagamento);
 	}
+	
+	public Restaurante buscarRestaurantePorCodigo(Long restauranteId) {
+		Restaurante restaurante = restauranteRepository.findById(restauranteId)
+					.orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));		
+		return restaurante;
+	}
+	
+	
+	public Produto buscarProdutoDoRestaurante(Long restauranteId, Long produtoId) {
+		var restaurante = buscarRestaurantePorCodigo(restauranteId);
+		return restaurante.buscarProduto(produtoId);		
+	}
+	
 	
 	private FormaPagamento buscarFormaPagamentoPorCodigo(Long formaPagamentoId) {
 		return formaPagamentoService.buscarPorId(formaPagamentoId);
@@ -130,5 +138,5 @@ public class RestauranteService {
 		return cidadeSerivce.buscarCidadePorCodigo(cidadeId);
 	}
 
-	
+
 }

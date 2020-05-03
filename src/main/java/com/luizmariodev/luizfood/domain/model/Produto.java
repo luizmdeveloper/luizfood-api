@@ -9,6 +9,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+
+import com.sun.istack.NotNull;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,12 +28,21 @@ public class Produto {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotBlank
 	private String nome;
+	
+	@NotBlank
 	private String descricao;
+	
+	@Positive
 	private BigDecimal valor;
+	
+	@NotNull
 	private Boolean ativo;
 	
 	@ManyToOne
-	@JoinColumn(name="codigo_restaurante")
+	@JoinColumn(name="codigo_restaurante",
+				nullable = false)
 	private Restaurante restaurante;
+	
 }

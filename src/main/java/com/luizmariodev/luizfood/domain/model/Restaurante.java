@@ -29,6 +29,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.luizmariodev.luizfood.core.validator.GroupValidation;
+import com.luizmariodev.luizfood.domain.exception.ProdutoNaoEncontradoException;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -74,7 +75,7 @@ public class Restaurante {
 	@JoinTable(name = "restaurantes_formas_pagamentos",
 			   joinColumns = @JoinColumn(name="codigo_restaurante"),
 			   inverseJoinColumns = @JoinColumn(name="codigo_forma_pagamento"))
-	private Set<FormaPagamento> pagamentos = new HashSet<FormaPagamento>();
+	private Set<FormaPagamento> pagamentos = new HashSet<FormaPagamento>();	
 	
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<Produto>();
@@ -93,6 +94,14 @@ public class Restaurante {
 	
 	public boolean removerFormaPagamento(FormaPagamento formaPagamento) {		
 		return getPagamentos().remove(formaPagamento);		
-	}	
+	}
 	
+	public Produto buscarProduto(Long produtoId) {
+		var produto = getProdutos().stream().filter(p -> p.getId().equals(produtoId)).findFirst();
+		
+		if (!produto.isPresent())
+			throw new ProdutoNaoEncontradoException(produtoId, id);
+		
+		return produto.get();
+	}	
 }
