@@ -138,5 +138,15 @@ public class RestauranteService {
 		return cidadeSerivce.buscarCidadePorCodigo(cidadeId);
 	}
 
-
+	@Transactional
+	public void fechar(Long restauranteId) {
+		var restaurante = buscarRestaurantePorCodigo(restauranteId);
+		restaurante.fechar();		
+	}
+	
+	@Transactional
+	public void abrir(Long restauranteId) {
+		var restaurante = buscarRestaurantePorCodigo(restauranteId);
+		restaurante.abrir();		
+	}
 }

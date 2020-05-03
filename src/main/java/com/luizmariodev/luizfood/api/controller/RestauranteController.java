@@ -97,6 +97,16 @@ public class RestauranteController {
 	public void inativar(@PathVariable Long restauranteId) {
 		restauranteService.inativar(restauranteId);
 	}
+	
+	@PutMapping("/{restauranteId}/fechamento")
+	public void fechar(@PathVariable Long restauranteId) {
+		restauranteService.fechar(restauranteId);
+	}
+	
+	@PutMapping("/{restauranteId}/abertura")
+	public void abrir(@PathVariable Long restauranteId) {
+		restauranteService.abrir(restauranteId);
+	}
 
 	private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino, HttpServletRequest request) {
 		ObjectMapper objectMapper = new ObjectMapper();

@@ -80,6 +80,9 @@ public class Restaurante {
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<Produto>();
 	
+	@NotNull
+	private Boolean aberto;
+	
 	public void ativar() {
 		setAtivo(true);
 	}
@@ -103,5 +106,13 @@ public class Restaurante {
 			throw new ProdutoNaoEncontradoException(produtoId, id);
 		
 		return produto.get();
+	}
+
+	public void fechar() {
+		setAberto(false);		
+	}
+
+	public void abrir() {
+		setAberto(true);		
 	}	
 }
