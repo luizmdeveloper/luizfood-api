@@ -1,5 +1,7 @@
 package com.luizmariodev.luizfood.domain.service;
 
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -85,7 +87,26 @@ public class RestauranteService {
 	public void inativar(Long restauranteId) {
 		var restaurante = buscarRestaurantePorCodigo(restauranteId);
 		restaurante.inativar();
-	}	
+	}
+	
+	@Transactional
+	public void ativar(List<Long> restauranteIds) {
+		try {
+			restauranteIds.forEach(this::ativar);			
+		} catch (RestauranteNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage(), e);
+		}
+	}
+	
+	@Transactional
+	public void inativar(List<Long> restauranteIds) {
+		try {
+			restauranteIds.forEach(this::inativar);			
+		} catch (RestauranteNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage(), e);
+		}
+
+	}
 	
 	@Transactional
 	public void excluir(Long id) {
@@ -113,6 +134,18 @@ public class RestauranteService {
 		restaurante.removerFormaPagamento(formaPagamento);
 	}
 	
+	@Transactional
+	public void fechar(Long restauranteId) {
+		var restaurante = buscarRestaurantePorCodigo(restauranteId);
+		restaurante.fechar();		
+	}
+	
+	@Transactional
+	public void abrir(Long restauranteId) {
+		var restaurante = buscarRestaurantePorCodigo(restauranteId);
+		restaurante.abrir();		
+	}	
+	
 	public Restaurante buscarRestaurantePorCodigo(Long restauranteId) {
 		Restaurante restaurante = restauranteRepository.findById(restauranteId)
 					.orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));		
@@ -138,15 +171,5 @@ public class RestauranteService {
 		return cidadeSerivce.buscarCidadePorCodigo(cidadeId);
 	}
 
-	@Transactional
-	public void fechar(Long restauranteId) {
-		var restaurante = buscarRestaurantePorCodigo(restauranteId);
-		restaurante.fechar();		
-	}
-	
-	@Transactional
-	public void abrir(Long restauranteId) {
-		var restaurante = buscarRestaurantePorCodigo(restauranteId);
-		restaurante.abrir();		
-	}
+
 }

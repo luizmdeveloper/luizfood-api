@@ -89,25 +89,41 @@ public class RestauranteController {
 	}
 	
 	@PutMapping("/{restauranteId}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void ativar(@PathVariable Long restauranteId) {
 		restauranteService.ativar(restauranteId);
 	}
 	
 	@DeleteMapping("/{restauranteId}/inativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void inativar(@PathVariable Long restauranteId) {
 		restauranteService.inativar(restauranteId);
 	}
 	
 	@PutMapping("/{restauranteId}/fechamento")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void fechar(@PathVariable Long restauranteId) {
 		restauranteService.fechar(restauranteId);
 	}
 	
 	@PutMapping("/{restauranteId}/abertura")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void abrir(@PathVariable Long restauranteId) {
 		restauranteService.abrir(restauranteId);
 	}
+	
+	@PutMapping("/ativacoes")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void ativacoes(@RequestBody List<Long> restauranteIds) {
+		restauranteService.ativar(restauranteIds);			
+	}
 
+	@DeleteMapping("/inativacoes")
+	@ResponseStatus(HttpStatus.NO_CONTENT)	
+	public void inativacoes(@RequestBody List<Long> restauranteIds) {
+		restauranteService.inativar(restauranteIds);			
+	}
+	
 	private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino, HttpServletRequest request) {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, true);
