@@ -17,6 +17,7 @@
 	<properties>
 		<java.version>12</java.version>
 		<model-mapper.version>2.3.0</model-mapper.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencies>

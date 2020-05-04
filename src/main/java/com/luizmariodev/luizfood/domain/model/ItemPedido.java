@@ -1,7 +1,6 @@
 package com.luizmariodev.luizfood.domain.model;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,7 +33,7 @@ public class ItemPedido {
 	@JoinColumn(name="codigo_produto")
 	private Produto produto;
 	
-	private BigInteger quantidade;
+	private Integer quantidade;
 	
 	@Column(name="valor_unitario")
 	private BigDecimal valorUnitario;
@@ -43,4 +42,9 @@ public class ItemPedido {
 	private BigDecimal valorTotal;
 	
 	private String observacao;
+
+	public void calcularValorTotal() {
+		valorTotal = new BigDecimal(quantidade.intValue()).multiply(valorUnitario);
+	}
+
 }

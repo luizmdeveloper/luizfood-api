@@ -8,4 +8,8 @@ public class ProdutoNaoEncontradoException extends EntidadeNaoEncontradaExceptio
 		super(String.format("Não existe produto com o código %d para orestaurante de código %d", produtoId, restauranteId));
 	}
 
+	public ProdutoNaoEncontradoException(Long produtoId) {
+		super(String.format("Não existe produto com o código %d", produtoId));
+	}
+
 }

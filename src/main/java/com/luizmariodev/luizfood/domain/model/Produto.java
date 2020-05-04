@@ -45,4 +45,8 @@ public class Produto {
 				nullable = false)
 	private Restaurante restaurante;
 	
+	public boolean isInativo() {
+		return !ativo;
+	}
+	
 }

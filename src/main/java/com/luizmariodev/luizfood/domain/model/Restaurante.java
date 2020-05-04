@@ -114,5 +114,26 @@ public class Restaurante {
 
 	public void abrir() {
 		setAberto(true);		
-	}	
+	}
+	
+	public boolean isInativo() {
+		return ativo ? false : true;
+	}
+	
+	public boolean isFechado() {
+		return aberto ? false : true;
+	}
+
+	public boolean isPermiteFormaPagamento(FormaPagamento pagamento) {	
+		var permitePagamento = false;
+		
+		for(FormaPagamento formaPagamento : getPagamentos()) {
+			if (formaPagamento.equals(pagamento)) {
+				permitePagamento = true;
+				break;
+			}
+		}
+		
+		return permitePagamento;
+	}
 }

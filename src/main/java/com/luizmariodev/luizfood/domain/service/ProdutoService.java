@@ -64,4 +64,10 @@ public class ProdutoService {
 		}
 	}
 
+	public Produto buscarProdutoPorCodigo(Long produtoId) {
+		Produto produto = produtoRepository.findById(produtoId)
+					.orElseThrow(() -> new ProdutoNaoEncontradoException(produtoId));
+		return produto;
+	}
+
 }
