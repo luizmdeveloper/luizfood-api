@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.luizmariodev.luizfood.domain.exception.EntidadeNaoEncontradaException;
 import com.luizmariodev.luizfood.domain.exception.NegocioException;
-import com.luizmariodev.luizfood.domain.exception.PedidoNaoEncontradoException;
 import com.luizmariodev.luizfood.domain.model.Cidade;
 import com.luizmariodev.luizfood.domain.model.FormaPagamento;
 import com.luizmariodev.luizfood.domain.model.Pedido;
@@ -38,7 +37,6 @@ public class PedidoService {
 	
 	@Autowired
 	private CidadeService cidadeService;
-	
 	
 	@Transactional
 	public Pedido salvar(Pedido pedido) {
@@ -89,13 +87,6 @@ public class PedidoService {
 		pedido.clacularValorTotal();
 		
 		return pedidoRepository.save(pedido);
-	}
-	
-	public Pedido buscarPedidoPorCodigo(Long pedidoId) {
-		Pedido pedido = pedidoRepository.findById(pedidoId)
-				.orElseThrow(() -> new PedidoNaoEncontradoException(pedidoId));
-		
-		return pedido;
 	}
 	
 	private Restaurante buscarRestaurantePorCodigo(Long restauranteId) {

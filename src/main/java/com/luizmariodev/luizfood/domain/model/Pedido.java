@@ -19,6 +19,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.luizmariodev.luizfood.domain.exception.NegocioException;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -70,10 +73,25 @@ public class Pedido {
 	private BigDecimal taxaFrete;
 	
 	@Enumerated(EnumType.STRING)
-	private Status status = Status.CRIADO;
+	private StatusPedido status = StatusPedido.CRIADO;
 	
 	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
 	private List<ItemPedido> itens = new ArrayList<ItemPedido>();
+	
+	public void confirmar() {
+		setStatus(StatusPedido.CONFIRMADO);
+		setDataConfirmacao(OffsetDateTime.now());
+	}
+	
+	public void entregar() {
+		setStatus(StatusPedido.ENTREGUE);
+		setDataEntrega(OffsetDateTime.now());		
+	}
+	
+	public void cancelar() {
+		setStatus(StatusPedido.CANCELADO);
+		setDataCancelamento(OffsetDateTime.now());		
+	}	
 
 	public void calcularSubTotal() {
 		subTotal = itens.stream()
@@ -84,4 +102,23 @@ public class Pedido {
 	public void clacularValorTotal() {
 		valorTotal = subTotal.add(taxaFrete);	
 	}
+
+	@JsonIgnore
+	public boolean isCriacdo() {
+		return getStatus().equals(StatusPedido.CRIADO);
+	}
+	
+	@JsonIgnore
+	public boolean isConfirmado() {
+		return getStatus().equals(StatusPedido.CONFIRMADO);
+	}
+	
+	private void setStatus(StatusPedido novoStatus) {
+		if (getStatus().naoPodeAlterarStatus()) {
+			throw new NegocioException(String.format("Pedido %d não pode ser altera status %s para %s", getId(), getStatus().getDescricao(), novoStatus.getDescricao()));			
+		}
+		
+		this.status = novoStatus;
+	}
+
 }

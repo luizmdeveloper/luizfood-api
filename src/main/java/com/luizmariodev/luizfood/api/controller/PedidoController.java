@@ -21,6 +21,7 @@ import com.luizmariodev.luizfood.api.model.PedidoModel;
 import com.luizmariodev.luizfood.api.model.PedidoResumoModel;
 import com.luizmariodev.luizfood.api.model.input.PedidoModelInput;
 import com.luizmariodev.luizfood.domain.repository.PedidoRepository;
+import com.luizmariodev.luizfood.domain.service.BuscaPedidoService;
 import com.luizmariodev.luizfood.domain.service.PedidoService;
 
 @RestController
@@ -32,6 +33,9 @@ public class PedidoController {
 	
 	@Autowired
 	private PedidoService pedidoService;
+	
+	@Autowired
+	private BuscaPedidoService buscaPedidoService;
 	
 	@Autowired
 	private PedidoModelAssembler pedidoModelAssembler;
@@ -50,7 +54,7 @@ public class PedidoController {
 	
 	@GetMapping("/{pedidoId}")
 	public PedidoModel buscarPorCodigo(@PathVariable Long pedidoId) {
-		var pedido = pedidoService.buscarPedidoPorCodigo(pedidoId);
+		var pedido = buscaPedidoService.buscar(pedidoId);
 		return pedidoModelAssembler.toModel(pedido);
 	}
 	
