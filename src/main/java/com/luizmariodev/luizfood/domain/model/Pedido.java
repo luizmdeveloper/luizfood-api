@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,7 +18,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.luizmariodev.luizfood.domain.exception.NegocioException;
@@ -35,6 +38,9 @@ public class Pedido {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@NotBlank
+	private String codigo;
 	
 	@ManyToOne
 	@JoinColumn(name="codigo_restaurante")
@@ -114,11 +120,17 @@ public class Pedido {
 	}
 	
 	private void setStatus(StatusPedido novoStatus) {
-		if (getStatus().naoPodeAlterarStatus()) {
-			throw new NegocioException(String.format("Pedido %d não pode ser altera status %s para %s", getId(), getStatus().getDescricao(), novoStatus.getDescricao()));			
+		
+		if (getStatus().naoPodeAlterarStatusPara(novoStatus)) {
+			throw new NegocioException(String.format("Pedido %s não pode ser altera status %s para %s", getCodigo(), getStatus().getDescricao(), novoStatus.getDescricao()));			
 		}
 		
 		this.status = novoStatus;
+	}
+	
+	@PrePersist
+	private void adicionarCodigoUUID() {
+		this.codigo = UUID.randomUUID().toString();
 	}
 
 }

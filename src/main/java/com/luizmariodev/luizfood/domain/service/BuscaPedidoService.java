@@ -13,9 +13,9 @@ public class BuscaPedidoService {
 	@Autowired
 	private PedidoRepository pedidoRepository;
 
-	public Pedido buscar(Long pedidoId) {
-		Pedido pedido = pedidoRepository.findById(pedidoId)
-				.orElseThrow(() -> new PedidoNaoEncontradoException(pedidoId));
+	public Pedido buscar(String codigoPedido) {
+		Pedido pedido = pedidoRepository.findByCodigo(codigoPedido)
+				.orElseThrow(() -> new PedidoNaoEncontradoException(codigoPedido));
 		
 		return pedido;
 	}

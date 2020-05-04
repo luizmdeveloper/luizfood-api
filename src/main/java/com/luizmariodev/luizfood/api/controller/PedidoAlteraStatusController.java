@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.luizmariodev.luizfood.domain.service.AlteraStatusPedidoService;
 
 @RestController
-@RequestMapping("/pedidos/{pedidoId}")
+@RequestMapping("/pedidos/{codigoPedido}")
 public class PedidoAlteraStatusController {
 	
 	@Autowired
@@ -19,19 +19,19 @@ public class PedidoAlteraStatusController {
 	
 	@PutMapping("/confirmacao")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void confirmacao(@PathVariable Long pedidoId) {
-		alteraStatusPedidoService.confirmar(pedidoId);
+	public void confirmacao(@PathVariable String codigoPedido) {
+		alteraStatusPedidoService.confirmar(codigoPedido);
 	}
 
 	@PutMapping("/entrega")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void entrega(@PathVariable Long pedidoId) {
-		alteraStatusPedidoService.entregar(pedidoId);
+	public void entrega(@PathVariable String codigoPedido) {
+		alteraStatusPedidoService.entregar(codigoPedido);
 	}
 
 	@PutMapping("/cancelamento")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void cancelamento(@PathVariable Long pedidoId) {
-		alteraStatusPedidoService.cancelar(pedidoId);
+	public void cancelamento(@PathVariable String codigoPedido) {
+		alteraStatusPedidoService.cancelar(codigoPedido);
 	}	
 }

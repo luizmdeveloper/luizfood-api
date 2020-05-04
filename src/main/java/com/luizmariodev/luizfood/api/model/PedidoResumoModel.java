@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class PedidoResumoModel {
 	
-	private Long id;
+	private String codigo;
 	private RestauranteResumoModel restaurante;
 	private UsuarioModel cliente;
 	private OffsetDateTime dataCricacao;	

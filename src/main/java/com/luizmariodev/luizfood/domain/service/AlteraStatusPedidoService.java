@@ -12,20 +12,20 @@ public class AlteraStatusPedidoService {
 	private BuscaPedidoService buscaPedidoService;
 	
 	@Transactional
-	public void confirmar(Long pedidoId) {
-		var pedido = buscaPedidoService.buscar(pedidoId);		
+	public void confirmar(String codigoPedido) {
+		var pedido = buscaPedidoService.buscar(codigoPedido);		
 		pedido.confirmar();
 	}
 	
 	@Transactional
-	public void entregar(Long pedidoId) {
-		var pedido = buscaPedidoService.buscar(pedidoId);		
+	public void entregar(String codigoPedido) {
+		var pedido = buscaPedidoService.buscar(codigoPedido);		
 		pedido.entregar();
 	}
 	
 	@Transactional
-	public void cancelar(Long pedidoId) {
-		var pedido = buscaPedidoService.buscar(pedidoId);		
+	public void cancelar(String codigoPedido) {
+		var pedido = buscaPedidoService.buscar(codigoPedido);		
 		pedido.cancelar();
 	}	
 }
