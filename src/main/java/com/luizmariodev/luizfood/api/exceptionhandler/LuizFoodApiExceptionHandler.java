@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -33,10 +34,15 @@ public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler 
 	
 	public static final String MENSAGEM_ERRO_GENERICO_USUARIO = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se o problema persistir," +
 															    " entre em contato com o administrador do sistema.";
-	
-	
+		
 	@Autowired
 	private MessageSource messageSource;  
+	
+	@Override
+	protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status,
+			WebRequest request) {
+		return handleBindingResultExceptionInternal(ex, headers, status, request, ex.getBindingResult());
+	}
 
 	@Override
 	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,HttpStatus status, WebRequest request) {
@@ -76,9 +82,14 @@ public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler 
 	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+		return handleBindingResultExceptionInternal(ex, headers, status, request, ex.getBindingResult());
+	}
+
+	private ResponseEntity<Object> handleBindingResultExceptionInternal(Exception ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request, BindingResult bindingResult) {
 		var detalhe = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
 		
-		BindingResult bindResult = ex.getBindingResult();
+		BindingResult bindResult = bindingResult;
 		List<Problema.Propriedade> propriedades = bindResult.getFieldErrors().stream()
 													.map(FieldError ->  {
 														String mensagemUauario = messageSource.getMessage(FieldError, LocaleContextHolder.getLocale());

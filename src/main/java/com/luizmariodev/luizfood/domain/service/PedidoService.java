@@ -77,7 +77,7 @@ public class PedidoService {
 			throw new NegocioException(e.getMessage(), e);
 		}
 		
-		pedido.setDataCricacao(OffsetDateTime.now());
+		pedido.setDataCriacao(OffsetDateTime.now());
 		pedido.getEnderecoEntrega().setCidade(cidade);;
 		pedido.setCliente(usuario);
 		pedido.setRestaurante(restaurante);
