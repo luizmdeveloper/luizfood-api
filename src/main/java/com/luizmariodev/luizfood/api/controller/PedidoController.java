@@ -20,9 +20,11 @@ import com.luizmariodev.luizfood.api.assembler.PedidoResumoModelAssembler;
 import com.luizmariodev.luizfood.api.model.PedidoModel;
 import com.luizmariodev.luizfood.api.model.PedidoResumoModel;
 import com.luizmariodev.luizfood.api.model.input.PedidoModelInput;
+import com.luizmariodev.luizfood.api.model.input.filter.PedidoInputFilter;
 import com.luizmariodev.luizfood.domain.repository.PedidoRepository;
 import com.luizmariodev.luizfood.domain.service.BuscaPedidoService;
 import com.luizmariodev.luizfood.domain.service.PedidoService;
+import com.luizmariodev.luizfood.infrastructure.repository.specs.PedidoSpecs;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -47,8 +49,8 @@ public class PedidoController {
 	private PedidoModelInputDisassembler pedidoModelInputDisassembler;
 	
 	@GetMapping
-	public List<PedidoResumoModel> buscarTodos() {
-		var pedidos = pedidoRepository.findAllResumo();
+	public List<PedidoResumoModel> pesquisar(PedidoInputFilter filtro) {
+		var pedidos = pedidoRepository.findAll(PedidoSpecs.pesquisar(filtro));
 		return pedidoResumoModelAssembler.toCollectionModel(pedidos);
 	}
 	

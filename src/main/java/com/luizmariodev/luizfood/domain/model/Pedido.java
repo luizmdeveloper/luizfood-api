@@ -55,7 +55,7 @@ public class Pedido {
 	private FormaPagamento pagamento;
 	
 	@Column(name="data_criacao")
-	private OffsetDateTime dataCricacao;
+	private OffsetDateTime dataCriacao;
 	
 	@Column(name="data_confirmacao")
 	private OffsetDateTime dataConfirmacao;

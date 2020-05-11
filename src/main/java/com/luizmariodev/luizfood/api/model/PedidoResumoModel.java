@@ -13,7 +13,7 @@ public class PedidoResumoModel {
 	private String codigo;
 	private RestauranteResumoModel restaurante;
 	private UsuarioModel cliente;
-	private OffsetDateTime dataCricacao;	
+	private OffsetDateTime dataCriacao;	
 	private OffsetDateTime dataEntrega;	
 	private BigDecimal valorTotal;	
 	private BigDecimal subTotal;	
