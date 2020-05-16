@@ -15,10 +15,13 @@ public class PedidoSpecs {
 	
 	public static Specification<Pedido> pesquisar(PedidoInputFilter filtro) {
 		return (root, query, builder) -> {
-			root.fetch("restaurante").fetch("cozinha");
-			root.fetch("cliente");
-			root.fetch("pagamento");
-			root.fetch("enderecoEntrega").fetch("cidade");
+			
+			if (Pedido.class.equals(query.getResultType())) {
+				root.fetch("restaurante").fetch("cozinha");
+				root.fetch("cliente");
+				root.fetch("pagamento");
+				root.fetch("enderecoEntrega").fetch("cidade");				
+			}
 			
 			var predicates = new ArrayList<Predicate>();
 							

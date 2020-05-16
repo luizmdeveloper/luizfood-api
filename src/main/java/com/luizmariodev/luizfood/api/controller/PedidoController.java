@@ -1,10 +1,12 @@
 package com.luizmariodev.luizfood.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,9 +51,12 @@ public class PedidoController {
 	private PedidoModelInputDisassembler pedidoModelInputDisassembler;
 	
 	@GetMapping
-	public List<PedidoResumoModel> pesquisar(PedidoInputFilter filtro) {
-		var pedidos = pedidoRepository.findAll(PedidoSpecs.pesquisar(filtro));
-		return pedidoResumoModelAssembler.toCollectionModel(pedidos);
+	public Page<PedidoResumoModel> pesquisar(PedidoInputFilter filtro, @PageableDefault(size = 5) Pageable pageable) {
+		var pedidosPage = pedidoRepository.findAll(PedidoSpecs.pesquisar(filtro), pageable);		
+		var pedidosModel = pedidoResumoModelAssembler.toCollectionModel(pedidosPage.getContent());		
+		Page<PedidoResumoModel> pedidos = new PageImpl<PedidoResumoModel>(pedidosModel, pageable, pedidosPage.getTotalElements());
+	
+		return pedidos;
 	}
 	
 	@GetMapping("/{codigoPedido}")
