@@ -17,6 +17,7 @@
 	<properties>
 		<java.version>12</java.version>
 		<model-mapper.version>2.3.0</model-mapper.version>
+		<squiggly.version>1.3.18</squiggly.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -70,7 +71,13 @@
 		  <groupId>org.modelmapper</groupId>
 		  <artifactId>modelmapper</artifactId>
 		  <version>${model-mapper.version}</version>
-		</dependency>		
+		</dependency>
+		
+		<dependency>
+		  <groupId>com.github.bohnman</groupId>
+		  <artifactId>squiggly-filter-jackson</artifactId>
+		  <version>${squiggly.version}</version>
+		</dependency>	
 	</dependencies>
 
 	<build>

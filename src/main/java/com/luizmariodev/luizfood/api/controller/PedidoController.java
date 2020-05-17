@@ -1,5 +1,7 @@
 package com.luizmariodev.luizfood.api.controller;
 
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.luizmariodev.luizfood.api.assembler.PedidoModelAssembler;
 import com.luizmariodev.luizfood.api.assembler.PedidoModelInputDisassembler;
 import com.luizmariodev.luizfood.api.assembler.PedidoResumoModelAssembler;
+import com.luizmariodev.luizfood.api.core.data.PageableTransletor;
 import com.luizmariodev.luizfood.api.model.PedidoModel;
 import com.luizmariodev.luizfood.api.model.PedidoResumoModel;
 import com.luizmariodev.luizfood.api.model.input.PedidoModelInput;
@@ -52,6 +55,7 @@ public class PedidoController {
 	
 	@GetMapping
 	public Page<PedidoResumoModel> pesquisar(PedidoInputFilter filtro, @PageableDefault(size = 5) Pageable pageable) {
+		pageable = traduzirPageabble(pageable);
 		var pedidosPage = pedidoRepository.findAll(PedidoSpecs.pesquisar(filtro), pageable);		
 		var pedidosModel = pedidoResumoModelAssembler.toCollectionModel(pedidosPage.getContent());		
 		Page<PedidoResumoModel> pedidos = new PageImpl<PedidoResumoModel>(pedidosModel, pageable, pedidosPage.getTotalElements());
@@ -70,5 +74,20 @@ public class PedidoController {
 	public PedidoModel salvar(@RequestBody @Valid PedidoModelInput pedidoInput) {
 		var pedido = pedidoService.salvar(pedidoModelInputDisassembler.toDomainObject(pedidoInput));
 		return pedidoModelAssembler.toModel(pedido);
+	}
+	
+	private Pageable traduzirPageabble(Pageable apiPageable) {		
+		var mapeamento = Map.of(
+				"codigo", "codigo",
+				"valorTotal", "valorTotal",
+				"dataCriacao", "dataCriacao",
+				"restaurante.id","restaurante.id",
+				"restaurante.nome", "restaurante.nome",
+				"cliente.id", "cliente.id",
+				"cliente.nome", "cliente.nome",
+				"nomeCliente", "cliente.nome"
+			);				
+		
+		return PageableTransletor.translate(apiPageable, mapeamento);
 	}
 }
