@@ -1,4 +1,4 @@
-package com.luizmariodev.luizfood.api.model.input.filter;
+package com.luizmariodev.luizfood.domain.filtro;
 
 import java.time.OffsetDateTime;
 

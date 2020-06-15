@@ -7,7 +7,7 @@ import javax.persistence.criteria.Predicate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.luizmariodev.luizfood.api.model.input.filter.PedidoInputFilter;
+import com.luizmariodev.luizfood.domain.filtro.PedidoInputFilter;
 import com.luizmariodev.luizfood.domain.model.Pedido;
 import com.luizmariodev.luizfood.domain.model.StatusPedido;
 

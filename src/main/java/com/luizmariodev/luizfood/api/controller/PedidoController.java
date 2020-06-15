@@ -25,7 +25,7 @@ import com.luizmariodev.luizfood.api.core.data.PageableTransletor;
 import com.luizmariodev.luizfood.api.model.PedidoModel;
 import com.luizmariodev.luizfood.api.model.PedidoResumoModel;
 import com.luizmariodev.luizfood.api.model.input.PedidoModelInput;
-import com.luizmariodev.luizfood.api.model.input.filter.PedidoInputFilter;
+import com.luizmariodev.luizfood.domain.filtro.PedidoInputFilter;
 import com.luizmariodev.luizfood.domain.repository.PedidoRepository;
 import com.luizmariodev.luizfood.domain.service.BuscaPedidoService;
 import com.luizmariodev.luizfood.domain.service.PedidoService;
