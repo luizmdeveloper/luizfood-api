@@ -1,4 +1,4 @@
-package com.luizmariodev.luizfood.infrastructure.service;
+package com.luizmariodev.luizfood.infrastructure.service.query;
 
 import java.util.ArrayList;
 import java.util.Date;
