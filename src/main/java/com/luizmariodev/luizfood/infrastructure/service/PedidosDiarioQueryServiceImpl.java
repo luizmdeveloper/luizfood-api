@@ -25,12 +25,14 @@ public class PedidosDiarioQueryServiceImpl implements PedidosDiarioQueryService 
 	private EntityManager entityManager;
 
 	@Override
-	public List<PedidosDiario> consultarPedidos(PedidoFilter filtro) {		
+	public List<PedidosDiario> consultarPedidos(PedidoFilter filtro, String timeZoneOffset) {		
 		var builder = entityManager.getCriteriaBuilder();
 		var criteria = builder.createQuery(PedidosDiario.class);
 		var root = criteria.from(Pedido.class);
 		
-		var functionDateDataCriacao = builder.function("date", Date.class, root.get("dataCriacao"));
+		var functionConvertTzDataCriacao = builder.function("convert_tz", Date.class, root.get("dataCriacao"), builder.literal("+00:00"), builder.literal(timeZoneOffset));
+		
+		var functionDateDataCriacao = builder.function("date", Date.class, functionConvertTzDataCriacao);
 		
 		var selection = builder.construct(PedidosDiario.class, 
 					functionDateDataCriacao, 
@@ -49,22 +51,19 @@ public class PedidosDiarioQueryServiceImpl implements PedidosDiarioQueryService 
 		
 		predicates.add(root.get("status").in(StatusPedido.CONFIRMADO, StatusPedido.ENTREGUE));
 		
-		if (filtro != null) {
-			
-			if (filtro.getRestauranteId() != null) {
-				predicates.add(builder.equal(root.get("restaurante.Id"), filtro.getRestauranteId()));
-			} 
-						
-			if (filtro.getDataCriacaoInicio() != null) {
-				predicates.add(builder.greaterThanOrEqualTo(root.get("dataCriaca"), filtro.getDataCriacaoFinal()));
-			}
+		if (filtro.getRestauranteId() != null) {
+			predicates.add(builder.equal(root.get("restaurante"), filtro.getRestauranteId()));
+		} 
+					
+		if (filtro.getDataCriacaoInicio() != null) {
+			predicates.add(builder.greaterThanOrEqualTo(root.get("dataCriacao"), filtro.getDataCriacaoFinal()));
+		}
 
-			if (filtro.getDataCriacaoFinal() != null) {
-				predicates.add(builder.lessThanOrEqualTo(root.get("dataCriaca"), filtro.getDataCriacaoFinal()));
-			}
+		if (filtro.getDataCriacaoFinal() != null) {
+			predicates.add(builder.lessThanOrEqualTo(root.get("dataCriacao"), filtro.getDataCriacaoFinal()));
 		}		
-
-		System.out.println(">>> passo 5");		
+				
+	
 		return predicates.toArray(new Predicate[predicates.size()]);
 	} 
 }

@@ -10,6 +10,6 @@ import com.luizmariodev.luizfood.domain.model.dto.PedidosDiario;
 @Service
 public interface PedidosDiarioQueryService {
 	
-	public List<PedidosDiario> consultarPedidos(PedidoFilter filtro);
+	public List<PedidosDiario> consultarPedidos(PedidoFilter filtro, String timeZoneOffset);
 
 }

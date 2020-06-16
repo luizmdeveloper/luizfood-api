@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.luizmariodev.luizfood.domain.filtro.PedidoFilter;
@@ -19,8 +20,8 @@ public class EstatisticasController {
 	private PedidosDiarioQueryService pedidosDiarioQueryServcice;
 	
 	@GetMapping("/pedidos-diarios")
-	public List<PedidosDiario> buscarPedidos(PedidoFilter filtro) {
-		return pedidosDiarioQueryServcice.consultarPedidos(filtro);
+	public List<PedidosDiario> buscarPedidos(PedidoFilter filtro, @RequestParam(required = false, defaultValue = "+00:00") String timeZoneOffset) {
+		return pedidosDiarioQueryServcice.consultarPedidos(filtro, timeZoneOffset);
 	}
 
 }
