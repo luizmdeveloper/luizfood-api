@@ -12,7 +12,8 @@ public enum TipoProblema {
 	PARAMETRO_INVALIDO("/parametro-invalido", "Parâmetro inválido"),
 	RECURSO_NAO_ENCONTRADO("/recurso-nao-encontrado", "Recurso não foi encontrado"),
 	ERRO_DE_SISTEMA("/erro-de-sistema", "Erro de sistema"),
-	DADOS_INVALIDOS("/erro-dados-invalidos", "Dados inválido");;
+	DADOS_INVALIDOS("/erro-dados-invalidos", "Dados inválido"),
+	ERRO_GERACAO_RELATORIO("/erro-geracao-relatorio", "Erro na geração relatório");
 	
 	private String titulo;
 	private String path;

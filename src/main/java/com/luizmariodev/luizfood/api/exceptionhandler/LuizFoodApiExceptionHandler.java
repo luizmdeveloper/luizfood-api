@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import com.luizmariodev.luizfood.domain.exception.EntidadeEmUsoException;
 import com.luizmariodev.luizfood.domain.exception.EntidadeNaoEncontradaException;
 import com.luizmariodev.luizfood.domain.exception.NegocioException;
+import com.luizmariodev.luizfood.infrastructure.service.report.exception.RelatorioException;
 
 @ControllerAdvice
 public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -166,6 +167,16 @@ public class LuizFoodApiExceptionHandler extends ResponseEntityExceptionHandler 
 		
 		return handleExceptionInternal(e, problema, new HttpHeaders(), status, request);
 	}
+	
+	@ExceptionHandler(RelatorioException.class)
+	private ResponseEntity<?> handleRelatorioException(RelatorioException e, WebRequest request) {
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		var problema = criarProblemaBuilder(TipoProblema.ERRO_GERACAO_RELATORIO, status, e.getMessage())
+						.mensagemUsuario(e.getMessage())
+						.build();
+		
+		return handleExceptionInternal(e, problema, new HttpHeaders(), status, request);
+	}	
 	
 	private ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e, HttpHeaders headers, HttpStatus status, WebRequest request) {		
 		String mensagemDetalhe = String.format("O parâmetro de URL '%s' recebeu o valor '%s', que é um tipo inválido. Coirrija e informe um valor compatível com o tipo '%s'", e.getName(), e.getValue(), e.getRequiredType().getSimpleName()); 
